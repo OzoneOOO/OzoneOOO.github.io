@@ -1,0 +1,62 @@
+{
+    "user_profile": {
+        "total_liquid_capital": 1500000,
+        "income_streams": {
+            "tier_1_guaranteed_pension": 60000,
+            "tier_2_variable_investment": 50000
+        },
+        "regulatory_limits": {
+            "conservative_dti": 0.35,
+            "user_max_dti": 0.5,
+            "bank_investment_haircut": 0.4
+        },
+        "target_20yr_net_worth": 5860000
+    },
+    "modeling_logic": {
+        "market_benchmark": "S&P 500 Total Return",
+        "market_cagr": 0.1,
+        "projection_horizon_years": 20,
+        "primary_metric": "Opportunity Cost of Capital Leakage"
+    },
+    "transaction_variables": [
+        "down_payment_percentage",
+        "closing_taxes_imt_ptt_stamp",
+        "foreign_buyer_tax_surcharge",
+        "mortgage_interest_rate_local",
+        "mandatory_life_insurance_premium",
+        "appraisal_gap_probability"
+    ],
+    "operating_variables": [
+        "property_tax_rate",
+        "lifestyle_dividend_col_savings",
+        "reinvestment_rate_of_surplus"
+    ],
+    "baseline_scenarios": {
+        "sacramento_ca": {
+            "strategy": "Maximum Leverage (VA Loan)",
+            "down_payment": 0,
+            "interest_rate": 0.068,
+            "20yr_projection": 5860000
+        },
+        "lisbon_portugal": {
+            "strategy": "Lifestyle Efficiency",
+            "down_payment": 0.3,
+            "closing_friction": 0.11,
+            "interest_rate": 0.031,
+            "20yr_projection": 5060000
+        },
+        "kelowna_bc": {
+            "strategy": "Capital Preservation",
+            "down_payment": 0.2,
+            "closing_friction": 0.025,
+            "interest_rate": 0.04,
+            "20yr_projection": 5100000
+        }
+    },
+    "agent_directives": [
+        "Calculate the 'Zero-Impact' purchase limit for new cities to match Sacramento baseline.",
+        "Verify local foreign buyer restrictions/bans.",
+        "Audit local bank weighting for USD-denominated pension income.",
+        "Project 20-year equity growth vs. property appreciation delta."
+    ]
+}

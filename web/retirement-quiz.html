@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Retirement City Quiz</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: Georgia, serif; background: #f7f4ef; }
+    #root { height: 100%; }
+    button { font-family: Georgia, serif; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #f0ede8; }
+    ::-webkit-scrollbar-thumb { background: #d0c8bc; border-radius: 2px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef } = React;
+
+// Extract the first valid JSON object from a string.
+// Walks the string looking for balanced '{...}' substrings (respecting string
+// quoting with escape handling), then returns the first one that successfully
+// parses as JSON. Returns null if none found.
+// This is more robust than /\{[\s\S]*\}/ which greedily matches from the first
+// '{' to the LAST '}' in the entire string, failing when the model emits prose
+// with braces before the real JSON. It is also more robust than a naive
+// balanced-brace parser, because the model might write prose like "a question
+// about {walkability}" before the real JSON — {walkability} is brace-balanced
+// but isn't valid JSON, so we skip past it and keep looking.
+function extractJSON(text) {
+  if (!text) return null;
+  let searchFrom = 0;
+  while (searchFrom < text.length) {
+    const start = text.indexOf("{", searchFrom);
+    if (start === -1) return null;
+    let depth = 0;
+    let inString = false;
+    let escape = false;
+    let foundEnd = -1;
+    for (let i = start; i < text.length; i++) {
+      const ch = text[i];
+      if (escape) { escape = false; continue; }
+      if (ch === "\\") { escape = true; continue; }
+      if (ch === '"') { inString = !inString; continue; }
+      if (inString) continue;
+      if (ch === "{") depth++;
+      else if (ch === "}") {
+        depth--;
+        if (depth === 0) { foundEnd = i; break; }
+      }
+    }
+    if (foundEnd === -1) return null; // unbalanced from here to end
+    const candidate = text.slice(start, foundEnd + 1);
+    try {
+      JSON.parse(candidate);
+      return candidate; // first balanced-and-parseable object wins
+    } catch (_) {
+      // Not valid JSON (e.g. "{walkability}" from prose). Advance past this
+      // '{' and keep looking for the next balanced substring.
+      searchFrom = start + 1;
+    }
+  }
+  return null;
+}
+
+const DIMENSIONS = [
+  "SAD RISK","DANGEROUS WEATHER EVENTS","AIR QUALITY",
+  "WALKABILITY","HOUSING TYPE","TAX BURDEN",
+  "INTERNATIONAL FRICTION","GOVERNMENT ALIGNMENT","FISCAL STABILITY",
+  "PUBLIC SAFETY","URBAN SCALE","WATER ACCESS","CLIMATE CHANGE TRAJECTORY"
+];
+
+// Tier assignment is computed client-side from the authoritative pairing matrix
+// rather than trusted from the model's "tier" field in JSON. The model sometimes
+// mislabels tier — especially tier 2 (14 pairs to pick from) — which makes the
+// termination gate unreliable. By normalizing each pair to a canonical sorted key,
+// we get a deterministic tier lookup regardless of how the model orders the
+// dimension names (SAD RISK × WALKABILITY vs WALKABILITY × SAD RISK).
+function pairKey(a, b) {
+  return [a.trim(), b.trim()].sort().join(" | ");
+}
+
+const TIER_1_PAIRS = [
+  ["SAD RISK", "WALKABILITY"],
+  ["SAD RISK", "INTERNATIONAL FRICTION"],
+  ["SAD RISK", "URBAN SCALE"],
+  ["WALKABILITY", "HOUSING TYPE"],
+  ["WALKABILITY", "INTERNATIONAL FRICTION"],
+  ["DANGEROUS WEATHER EVENTS", "WALKABILITY"],
+  ["DANGEROUS WEATHER EVENTS", "URBAN SCALE"],
+];
+
+const TIER_2_PAIRS = [
+  ["SAD RISK", "TAX BURDEN"],
+  ["SAD RISK", "FISCAL STABILITY"],
+  ["SAD RISK", "AIR QUALITY"],
+  ["WALKABILITY", "TAX BURDEN"],
+  ["WALKABILITY", "FISCAL STABILITY"],
+  ["WALKABILITY", "URBAN SCALE"],
+  ["DANGEROUS WEATHER EVENTS", "INTERNATIONAL FRICTION"],
+  ["DANGEROUS WEATHER EVENTS", "TAX BURDEN"],
+  ["INTERNATIONAL FRICTION", "TAX BURDEN"],
+  ["GOVERNMENT ALIGNMENT", "WALKABILITY"],
+  ["GOVERNMENT ALIGNMENT", "INTERNATIONAL FRICTION"],
+  ["PUBLIC SAFETY", "WALKABILITY"],
+  ["PUBLIC SAFETY", "INTERNATIONAL FRICTION"],
+  ["FISCAL STABILITY", "URBAN SCALE"],
+];
+
+const TIER_3_PAIRS = [
+  ["AIR QUALITY", "INTERNATIONAL FRICTION"],
+  ["AIR QUALITY", "WALKABILITY"],
+  ["WATER ACCESS", "SAD RISK"],
+  ["WATER ACCESS", "URBAN SCALE"],
+  ["CLIMATE CHANGE TRAJECTORY", "WALKABILITY"],
+  ["CLIMATE CHANGE TRAJECTORY", "URBAN SCALE"],
+  ["CLIMATE CHANGE TRAJECTORY", "INTERNATIONAL FRICTION"],
+];
+
+// Lookup: canonical pair key -> tier number. Falls back to 0 (unknown) for pairs
+// that don't match any entry in the matrix.
+const TIER_LOOKUP = (() => {
+  const lookup = {};
+  TIER_1_PAIRS.forEach(([a, b]) => { lookup[pairKey(a, b)] = 1; });
+  TIER_2_PAIRS.forEach(([a, b]) => { lookup[pairKey(a, b)] = 2; });
+  TIER_3_PAIRS.forEach(([a, b]) => { lookup[pairKey(a, b)] = 3; });
+  return lookup;
+})();
+
+// Derive tier from a dimensionPair string like "SAD RISK × WALKABILITY".
+// Returns 0 if the pair isn't in the matrix (defensive: lets calling code skip
+// counting rather than mis-counting). Accepts either "×" (intended) or "x" or "-"
+// as separators in case the model varies its output.
+// Termination ceiling. Soft termination is at MIN_QUESTIONS + tier 1 coverage,
+// but the quiz will exit unconditionally at MAX_QUESTIONS even if tier 1 isn't
+// fully covered — defense-in-depth against the tier counter failing to advance
+// (e.g. model consistently producing pairs not in the matrix). 40 questions of
+// forced tradeoffs is more than enough signal for the summary.
+const MIN_QUESTIONS = 30;
+const MIN_TIER_1_COUNT = 14;
+const MAX_QUESTIONS = 40;
+
+function tierFromPair(pair) {
+  if (!pair || typeof pair !== "string") return 0;
+  const parts = pair.split(/[×x\-]/).map(s => s.trim()).filter(Boolean);
+  if (parts.length !== 2) return 0;
+  return TIER_LOOKUP[pairKey(parts[0], parts[1])] || 0;
+}
+
+const SYSTEM_PROMPT = `You are administering a retirement preference quiz. Your job is to reveal the user's true priorities through forced tradeoffs — not by asking what they want directly.
+
+You have no fixed city list. You are revealing a preference profile that will be used to search for matching cities anywhere in the world.
+
+---
+
+DIMENSIONS AND THEIR LEVELS
+
+Each question trades one level from one dimension against one level from a DIFFERENT dimension. Levels within a dimension must be genuinely distinct in lifestyle consequence — not just degrees of the same thing.
+
+SAD RISK (binary):
+- Low — sufficient sunlight and irradiance year-round; chronic low-light periods not a significant concern
+- Meaningful — chronic periods of low irradiance that can affect mood, cognition, and outdoor life for weeks or months at a time; not just gray days but sustained light deficits
+
+DANGEROUS WEATHER EVENTS (binary):
+- Low — weather does not pose meaningful health risk or confine people indoors for extended periods
+- High — recurring conditions that are genuinely dangerous or severely lifestyle-constraining: polar vortex events, heat waves above 100°F with health risk, wildfire smoke that closes outdoor life for weeks, hurricanes, ice storms causing extended power outages. Not "it rains a lot" or "winters are cold" — specifically dangerous or severely confining.
+
+AIR QUALITY (binary):
+- Good baseline — no structural air quality problem; occasional episodic events only
+- Structural concern — valley inversions, volcanic smog, or chronic pollution that affects daily outdoor activity
+
+WALKABILITY (binary):
+- Car not required — transit and walkability make car ownership unnecessary
+- Car required — a car is needed for normal daily life regardless of transit availability
+
+HOUSING TYPE (binary — a preference declaration; always pair with a different dimension as the cost):
+- High-rise condo specifically preferred — only cities with genuine high-rise condo markets satisfy this
+- High-rise not a requirement — any urban housing type is acceptable
+
+TAX BURDEN ON RETIREMENT INCOME (3 levels):
+- Minimal — retirement income largely or fully exempt; low effective rate
+- Moderate — partial taxation; meaningful but not punishing
+- High — pension and retirement income substantially taxed; includes foreign tax complexity
+
+INTERNATIONAL FRICTION (3 levels):
+- Domestic — US city; zero language, visa, or foreign tax complexity
+- Accessible foreign — English widely spoken; familiar legal and financial systems; low bureaucratic friction
+- High friction — new language required; foreign tax system; visa and residency management ongoing
+
+GOVERNMENT ALIGNMENT (binary):
+- Aligned or neutral — local progressive values face no meaningful opposition from state or national government
+- Actively contested — higher levels of government work against local policy; ongoing friction or legal risk
+
+FISCAL STABILITY (binary):
+- Sound — city budget structurally stable or improving; services reliable; no doom loop risk
+- Stressed — structural deficit, declining tax base, or service trajectory uncertain
+
+PUBLIC SAFETY (binary):
+- Low concern — crime rates low; no meaningful expat-specific risk; disorder not a daily factor
+- Requires awareness — elevated baseline, geographic variation, or specific expat risk patterns require active neighborhood selection and behavioral awareness
+
+URBAN SCALE (binary):
+- Dense metro — large city with world-class institutions, deep cultural infrastructure, high density
+- Smaller urban area — genuine urban core but thinner institutions, lower density, more manageable scale
+
+WATER ACCESS (binary):
+- Meaningful recreational water access — ocean, lake, bay, or river within reach
+- No significant water access — inland or landlocked
+
+CLIMATE CHANGE TRAJECTORY (binary):
+- Manageable — projected changes are significant but within range of human adaptation; no catastrophic trajectory
+- Severe projected risk — meaningful probability of conditions becoming unlivable or infrastructure-threatening within a 30-year horizon
+
+---
+
+PERMITTED PAIRING MATRIX
+
+Only these dimension pairs may appear in a single question. Never pair two dimensions not on this list. Never pair a dimension with itself.
+
+Tier 1 — probe at least twice each, from different angles:
+- SAD RISK × WALKABILITY
+- SAD RISK × INTERNATIONAL FRICTION
+- SAD RISK × URBAN SCALE
+- WALKABILITY × HOUSING TYPE
+- WALKABILITY × INTERNATIONAL FRICTION
+- DANGEROUS WEATHER EVENTS × WALKABILITY
+- DANGEROUS WEATHER EVENTS × URBAN SCALE
+
+Tier 2 — probe exactly once each:
+- SAD RISK × TAX BURDEN
+- SAD RISK × FISCAL STABILITY
+- SAD RISK × AIR QUALITY
+- WALKABILITY × TAX BURDEN
+- WALKABILITY × FISCAL STABILITY
+- WALKABILITY × URBAN SCALE
+- DANGEROUS WEATHER EVENTS × INTERNATIONAL FRICTION
+- DANGEROUS WEATHER EVENTS × TAX BURDEN
+- INTERNATIONAL FRICTION × TAX BURDEN
+- GOVERNMENT ALIGNMENT × WALKABILITY
+- GOVERNMENT ALIGNMENT × INTERNATIONAL FRICTION
+- PUBLIC SAFETY × WALKABILITY
+- PUBLIC SAFETY × INTERNATIONAL FRICTION
+- FISCAL STABILITY × URBAN SCALE
+
+Tier 3 — probe only if unresolved tension detected after Tier 1 and 2:
+- AIR QUALITY × INTERNATIONAL FRICTION
+- AIR QUALITY × WALKABILITY
+- WATER ACCESS × SAD RISK
+- WATER ACCESS × URBAN SCALE
+- CLIMATE CHANGE TRAJECTORY × WALKABILITY
+- CLIMATE CHANGE TRAJECTORY × URBAN SCALE
+- CLIMATE CHANGE TRAJECTORY × INTERNATIONAL FRICTION
+
+TERMINATION CONDITION:
+The quiz controller decides when to stop. Your job is to keep asking well-formed questions from the permitted pairing matrix, rotating through unused pairs systematically. Do not repeat a Tier 1 pair until all Tier 1 pairs have been used once. Do not repeat a Tier 2 pair at all unless specifically directed. Do not use Tier 3 pairs until all Tier 1 and Tier 2 pairs are exhausted.
+
+MATRIX EXHAUSTION FALLBACK:
+If you have used all permitted pairs according to the rules above and the quiz controller asks for another question, re-probe Tier 1 pairs from a DIFFERENT ANGLE — use different level combinations, different framings, or explore a different aspect of the same tradeoff. Never refuse to generate a question. Never respond with prose explaining that no pairs remain. Always return valid JSON. The quiz controller handles termination; your only job is to produce well-formed questions.
+
+---
+
+QUESTION CONSTRUCTION RULES — ALL MUST BE FOLLOWED
+
+RULE 1 — EXACTLY TWO VARIABLES, ONE PER OPTION.
+Option A offers one level of dimension X. Option B offers one level of dimension Y. Everything else is held constant or unspecified. No other variables may differ between the options.
+
+CORRECT:
+Q: "A city with low SAD risk year-round where chronic low light is never a concern, or a city where you never need a car but meaningful SAD risk exists for several months each year?"
+A: Low SAD risk, car situation unspecified
+B: Car not required, meaningful SAD risk
+Two variables. One per option. Clean.
+
+WRONG — bundled:
+"Eternal spring in a walkable city at low cost, or cold winters with great transit and strong LGBTQ+ protections at high cost?"
+This bundles three dimensions on each side. Impossible to decompose.
+
+RULE 2 — NO ABSOLUTE NUMBERS.
+Never name a price, salary, tax rate, or specific dollar/euro figure. All cost and tax language must be relative.
+
+RULE 3 — NEVER NAME A CITY, NEIGHBORHOOD, OR IDENTIFIABLE LOCATION.
+Describe characteristics only. Do not construct questions from knowledge of specific real places.
+
+RULE 4 — BOTH OPTIONS MUST BE GENUINELY DESIRABLE.
+The user must feel they are giving something up whichever they choose. If one option is obviously better, the question is a tolerance test, not a tradeoff. Discard and rewrite.
+
+RULE 5 — OPTIONS MUST DIFFER ON THE PAIRED DIMENSIONS ONLY.
+If testing SAD RISK × WALKABILITY, the options must differ only on those two dimensions. Cost, scale, and all other dimensions must be unspecified.
+
+RULE 6 — OPTION LABELS MUST NAME BOTH GAIN AND SACRIFICE.
+Each label must say what the user gets AND what they give up.
+CORRECT: "Low SAD risk, car required" / "Car not required, meaningful SAD risk"
+WRONG: "Car-free living" — omits what was sacrificed
+
+RULE 7 — RESOLVED DIMENSIONS ARE CLOSED.
+Once a binary dimension has produced a clear answer, treat it as settled. Do not construct questions that probe the limits of that answer or test how strongly the user feels about it. The only valid reason to revisit a dimension is if a subsequent answer directly contradicted an earlier one — and that contradiction should be surfaced explicitly, not probed through progressively harder versions of the same question. Move to unmapped dimension pairs.
+
+---
+
+CITY REFERENCE DATA — READ ONLY
+
+Use only to verify your questions reflect real-world tradeoffs that actually exist. Do not use to generate scores, construct city-shaped options, or reason about which cities benefit from an answer. Never name cities in questions or options.
+
+SAD RISK:
+- Low: Honolulu, Medellín, Lisbon, Albuquerque, Kansas City, Virginia Beach MSA, Philadelphia (moderate), Chicago (moderate)
+- Meaningful: Portland (chronic gray Oct-May), Eugene (same as Portland plus more fog), Anchorage (extreme — 5.5hrs daylight at solstice), Toronto (lake effect cloud adds to winter gray)
+
+DANGEROUS WEATHER EVENTS:
+- Low: Medellín, Lisbon, Philadelphia, Eugene, Portland (smoke risk but rarely severe)
+- High: Chicago (polar vortex — genuinely dangerous cold; heat waves), Kansas City (tornado risk; 100°F+ heat index), Anchorage (extreme cold; ice; limited emergency infrastructure), Honolulu (hurricane risk; vog health impact), Virginia Beach MSA (hurricane landfall risk; nor'easters), Toronto (ice storms causing multi-day power outages; extreme humidex), Albuquerque (wildfire smoke incursions; flash flooding)
+
+AIR QUALITY:
+- Good baseline: Lisbon, Anchorage, Virginia Beach MSA, Philadelphia, Kansas City, Toronto
+- Structural concern: Medellín (valley inversion), Honolulu (vog), Portland/Eugene (wildfire smoke seasons), Chicago (PM2.5 inversions)
+
+WALKABILITY:
+- Car not required: Chicago, Lisbon, Toronto, Philadelphia, Medellín, Portland (Pearl/South Waterfront)
+- Car required: Albuquerque, Kansas City, Eugene, Virginia Beach MSA, Anchorage, Honolulu (outside rail corridor)
+
+HOUSING TYPE — high-rise condo markets only (cities without this are car-to for high-rise preference):
+- Genuine high-rise condo market: Chicago, Honolulu, Toronto, Philadelphia, Portland (limited inventory)
+- No meaningful high-rise condo market: Eugene, Albuquerque, Kansas City, Virginia Beach MSA, Anchorage, Lisbon, Medellín (mid-rise only)
+
+TAX BURDEN:
+- Minimal: Anchorage (zero), Albuquerque (very low), Philadelphia (exempt 60+), Virginia Beach (SS exempt + deductions)
+- Moderate: Kansas City, Chicago (exempt but high property tax)
+- High: Portland, Eugene (all pension taxed), Toronto (Canadian rates), Lisbon (NHR closed), Honolulu (401k taxable)
+
+INTERNATIONAL FRICTION:
+- Domestic: all US cities
+- Accessible foreign: Toronto, Lisbon
+- High friction: Medellín (Spanish required, Colombian tax)
+
+GOVERNMENT ALIGNMENT:
+- Aligned or neutral: Portland, Eugene, Philadelphia, Chicago, Honolulu, Lisbon, Toronto
+- Actively contested: Kansas City (MO state), Virginia Beach (VA state), Anchorage (AK state mixed)
+
+FISCAL STABILITY:
+- Sound: Philadelphia (pension improving), Honolulu, Kansas City, Lisbon, Medellín, Virginia Beach MSA
+- Stressed: Portland (doom loop risk), Chicago (chronic deficit), Eugene (structural gap), Anchorage (fiscal cliff), Toronto (structural shortfall)
+
+PUBLIC SAFETY:
+- Low concern: Lisbon, Honolulu, Eugene, Philadelphia (improving), Virginia Beach MSA
+- Requires awareness: Medellín (expat-specific patterns, neighborhood-dependent), Chicago (geographically concentrated), Anchorage (elevated property crime), Albuquerque (improving but elevated), Kansas City (geographically concentrated)
+
+URBAN SCALE:
+- Dense metro: Chicago, Toronto, Philadelphia, Lisbon, Medellín, Honolulu
+- Smaller urban area: Portland, Eugene, Anchorage, Kansas City, Albuquerque, Virginia Beach MSA
+
+WATER ACCESS:
+- Meaningful: Honolulu, Virginia Beach MSA, Toronto (Lake Ontario), Chicago (Lake Michigan), Philadelphia (Delaware/Schuylkill), Lisbon (Tagus/Atlantic), Anchorage (Cook Inlet/rivers), Portland (Columbia/Willamette), Eugene (Willamette)
+- Limited: Kansas City, Albuquerque, Medellín (rivers but limited access)
+
+CLIMATE CHANGE TRAJECTORY:
+- Manageable: Lisbon, Toronto, Chicago, Philadelphia, Portland, Eugene, Medellín
+- Severe projected risk: Honolulu (sea level + coral), Virginia Beach MSA (fastest-subsiding US coast), Kansas City (extreme heat projection), Albuquerque (drought + heat amplification), Anchorage (permafrost + glacier loss)
+
+Use this to sanity-check that your tradeoffs are real. Do not use it to score anything.
+---
+
+QUESTION FORMAT — return ONLY valid JSON, no preamble:
+{
+  "question": "Full question text — exactly two variables, no absolute numbers, no city names",
+  "optionA": "What A gives you, what A costs you — both sides, 4-10 words",
+  "optionB": "What B gives you, what B costs you — both sides, 4-10 words",
+  "dimensionPair": "DIMENSION_X × DIMENSION_Y",
+  "tier": 1,
+  "chosenDimensionLevel": "",
+  "sacrificedDimensionLevel": "",
+  "reasoning": "One sentence — what this answer reveals about the dimension pair, not which cities it favors",
+  "questionNumber": 0
+}`;
+const SUMMARY_PROMPT = `Based on the quiz answers, build a retirement city search prompt that captures what this person's tradeoffs actually revealed about their priorities. Return ONLY valid JSON, no preamble:
+{
+  "profileSummary": "3-4 sentences describing the revealed preference profile — what they consistently chose, what they consistently sacrificed, and what that means about their actual priorities. Written in second person (you revealed, you chose, you sacrificed).",
+  "keyTension": "1-2 sentences naming a SPECIFIC contradiction between two actual answers — e.g. chose walkability over cost twice but chose lower cost over urban density once. Must reference specific dimension pairs that conflicted, not restate the general difficulty of finding a good city. If no genuine contradiction exists, state that the profile is internally consistent.",
+  "dimensionWeights": {
+    "sadRisk": "strongly preferred | moderate | weak | indifferent",
+    "dangerousWeatherEvents": "strongly preferred | moderate | weak | indifferent",
+    "airQuality": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "walkability": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "housingType": "high-rise specifically required | high-rise preferred but not required | no strong preference",
+    "taxBurden": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "internationalFriction": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "governmentAlignment": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "fiscalStability": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "publicSafety": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "urbanScale": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "waterAccess": "non-negotiable | strongly preferred | moderate | weak | indifferent",
+    "climateChangeTrajectory": "non-negotiable | strongly preferred | moderate | weak | indifferent"
+  },
+  "climateProfile": "Specific climate characteristics revealed as important — sunshine hours, temperature range, humidity tolerance, seasonal preference",
+  "housingProfile": "Revealed housing priorities — building type, density, ownership vs renting implications",
+  "dealbreakers": ["list of things they consistently rejected when forced to choose"],
+  "acceptedTradeoffs": ["list of things they were willing to sacrifice for something else"],
+  "searchPrompt": "A complete, ready-to-paste prompt for a retirement city research agent. Must be 250-400 words. Structure it as follows: (1) Open with: I am looking for a retirement city anywhere in the world. (2) State the top 1-2 priorities as things I would sacrifice significantly to have — not hard filters that eliminate cities, but the dimensions I weighted most heavily when forced to choose. Frame as: I would accept [sacrifice] to have [priority]. (3) List all remaining priorities in explicit ranked order, numbered 1 through N, from most to least important based on how consistently they were chosen when they conflicted with other dimensions. Each priority should be one sentence. Do NOT use the phrase 'everything else is negotiable' — it must never appear. Every dimension that produced a clear answer belongs in the numbered list with its revealed direction stated explicitly. (4) Name specific things consistently rejected when forced to choose. (5) Name what was consistently sacrificed for higher priorities. (6) Close with: Rank candidate cities in order by cumulative priority satisfaction. A city satisfying my top two priorities plus five secondary priorities ranks above one satisfying only the top two. Search broadly — do not limit to obvious English-speaking destinations. Explain how each candidate matches or conflicts with each ranked priority. End with: Please also independently research natural hazard profiles and water supply security for any candidate city, as these were not assessed in this quiz."
+}`;
+
+function App() {
+  const [questionNum, setQuestionNum] = useState(0);
+  const [currentQ, setCurrentQ] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [phase, setPhase] = useState("intro");
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [showPanel, setShowPanel] = useState(false);
+  const [dimCounts, setDimCounts] = useState({});
+  const conversationRef = useRef([]);
+  const fetchingRef = useRef(false);
+  const tierCountsRef = useRef({tier1:0, tier2:0, tier3:0});
+  const historyRef = useRef([]);  // mirrors history state; avoids stale closures in fetchQ
+  // Tracks whether the last error came from the question fetch or the results fetch,
+  // so the Retry button can call the correct function. Previously the retry button
+  // always called fetchQ, which meant a failed results call would incorrectly fetch
+  // another question instead of retrying the summary.
+  const errorSourceRef = useRef(null); // "question" | "results" | null
+  // Stashed history for retry: results fetch needs the final history array, but
+  // the stale-closure fix means we pass history explicitly. We store it here so
+  // the retry button can re-pass the same history without re-reading stale state.
+  const lastHistRef = useRef(null);
+
+  async function fetchQ(hist, qNum) {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+    setLoading(true); setError(null);
+    errorSourceRef.current = null;
+    try {
+      const msgs = [
+        ...hist,
+        { role:"user", content:`Question ${qNum+1}. ${qNum===0?"Ask the first question from Tier 1 of the permitted pairing matrix.":"Ask the next question. Return only valid JSON."}`}
+      ];
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ model:"claude-haiku-4-5-20251001", max_tokens:1000, system:SYSTEM_PROMPT, messages:msgs })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const errType = data.error?.type || "";
+        const errMsg = data.error?.message || "";
+        if (res.status === 429) throw new Error("Rate limited — wait 30 seconds then retry.");
+        if (res.status === 401) throw new Error("API key error (401) — check your key.");
+        throw new Error(`API error ${res.status}: ${errMsg || errType}`);
+      }
+      const raw = data.content?.find(b=>b.type==="text")?.text || "";
+      if (!raw) throw new Error("Empty response from API — retry.");
+      // Use balanced-brace extraction rather than greedy regex.
+      const jsonText = extractJSON(raw);
+      // MODEL REFUSAL DETECTION: If the model returned prose instead of JSON
+      // (typically because it exhausted all permitted pairs and chose to explain
+      // why rather than generate another question), and we're deep enough into
+      // the quiz to have meaningful data, gracefully terminate with results
+      // rather than showing an error with empty buttons.
+      if (!jsonText) {
+        if (historyRef.current.length >= 20) {
+          // We have enough data. Auto-terminate.
+          console.warn(`Model refused at Q${qNum+1} (no JSON). Auto-terminating with ${historyRef.current.length} answers.`);
+          fetchResults(historyRef.current);
+          return;
+        }
+        throw new Error("No JSON found in response — retry.");
+      }
+      const parsed = JSON.parse(jsonText);
+      conversationRef.current = [...hist, {role:"user",content:msgs[msgs.length-1].content},{role:"assistant",content:raw}];
+      setCurrentQ(parsed);
+      setSelected(null);
+    } catch(e) {
+      errorSourceRef.current = "question";
+      setError(e.message || "Failed to load question. Tap to retry.");
+    }
+    setLoading(false);
+    fetchingRef.current = false;
+  }
+
+  // fetchResults now accepts the final history as a parameter rather than reading
+  // from the `history` state via closure. The setTimeout in choose() captures
+  // fetchResults from the render at the moment choose ran, and that closure has
+  // the pre-update history. Passing newHist explicitly eliminates the stale read
+  // that was causing blank Q/A entries to appear in the results payload.
+  async function fetchResults(finalHist) {
+    setLoading(true);
+    setError(null);
+    errorSourceRef.current = null;
+    lastHistRef.current = finalHist;
+    try {
+      const histText = finalHist.map(h=>`Q${h.qNum} [${h.dimensionPair||""}]: "${h.question}" → "${h.choice}" (${h.option})`).join("\n");
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:1500, system:SUMMARY_PROMPT,
+          messages:[{role:"user", content:`Answer history:\n${histText}\n\nReturn only valid JSON.`}]
+        })
+      });
+      const data = await res.json();
+      // Mirror fetchQ's status-code-aware error handling so the user gets the
+      // same quality of diagnostic information at the summary step as they do
+      // during question fetching.
+      if (!res.ok) {
+        const errType = data.error?.type || "";
+        const errMsg = data.error?.message || "";
+        if (res.status === 429) throw new Error("Rate limited — wait 30 seconds then retry.");
+        if (res.status === 401) throw new Error("API key error (401) — check your key.");
+        throw new Error(`API error ${res.status}: ${errMsg || errType}`);
+      }
+      const raw = data.content?.find(b=>b.type==="text")?.text || "";
+      if (!raw) throw new Error("Empty response from API — retry.");
+      const jsonText = extractJSON(raw);
+      if (!jsonText) throw new Error("No JSON found in results response — retry.");
+      setResults(JSON.parse(jsonText));
+      setPhase("results");
+    } catch(e) {
+      errorSourceRef.current = "results";
+      setError(e.message || "Failed to generate results. Tap to retry.");
+    }
+    setLoading(false);
+  }
+
+  function start() { setPhase("quiz"); fetchQ([], 0); }
+
+  function choose(opt) {
+    if (loading || selected) return;
+    setSelected(opt);
+    const label = opt==="A" ? currentQ.optionA : currentQ.optionB;
+    const pair = currentQ.dimensionPair || "";
+    // Compute tier client-side from the authoritative matrix rather than trusting
+    // the model's "tier" field. The model's self-labeling is unreliable and was
+    // the root cause of termination bugs (quiz ending too early or too late).
+    // tierFromPair returns 0 for unrecognized pairs; those don't increment any
+    // tier counter, which prevents a mislabeled/invented pair from advancing the
+    // termination gate inappropriately.
+    const tier = tierFromPair(pair);
+
+    // Track dimension probe counts
+    const dims = pair.split("×").map(d=>d.trim());
+    setDimCounts(prev => {
+      const next = {...prev};
+      dims.forEach(d => { next[d] = (next[d]||0) + 1; });
+      return next;
+    });
+
+    const newHist = [...history, {
+      qNum:questionNum+1,
+      question:currentQ.question,
+      option:opt,
+      choice:label,
+      dimensionPair:pair,
+      tier
+    }];
+    setHistory(newHist);
+    historyRef.current = newHist;
+    const newQNum = questionNum+1;
+    setQuestionNum(newQNum);
+
+    setTimeout(() => {
+      const newTierCounts = {...tierCountsRef.current};
+      if (tier === 1) newTierCounts.tier1 = (newTierCounts.tier1||0) + 1;
+      else if (tier === 2) newTierCounts.tier2 = (newTierCounts.tier2||0) + 1;
+      else if (tier === 3) newTierCounts.tier3 = (newTierCounts.tier3||0) + 1;
+      // tier === 0 (pair not in matrix) deliberately doesn't increment anything
+      tierCountsRef.current = newTierCounts;
+      const tier1Done = newTierCounts.tier1 >= MIN_TIER_1_COUNT;
+      // Soft termination: minimum questions reached AND tier 1 coverage complete.
+      // Hard termination: absolute question ceiling reached regardless of coverage.
+      // The hard cap protects against the soft gate never closing due to upstream
+      // failure (mislabeled pairs, unrecognized dimension pairs, etc.).
+      const softDone = newQNum >= MIN_QUESTIONS && tier1Done;
+      const hardDone = newQNum >= MAX_QUESTIONS;
+      if (softDone || hardDone) fetchResults(newHist);
+      else fetchQ(conversationRef.current, newQNum);
+    }, 500);
+  }
+
+  function restart() {
+    setQuestionNum(0); setCurrentQ(null); setHistory([]);
+    setResults(null); setSelected(null); setError(null);
+    setDimCounts({});
+    conversationRef.current = []; fetchingRef.current = false;
+    tierCountsRef.current = {tier1:0,tier2:0,tier3:0};
+    historyRef.current = [];
+    errorSourceRef.current = null;
+    lastHistRef.current = null;
+    setPhase("intro");
+  }
+
+  // ── STYLES ──
+  const s = {
+    root: { minHeight:"100vh", background:"#f7f4ef", fontFamily:"Georgia,serif", color:"#1a1a1a", display:"flex", flexDirection:"column" },
+    header: { background:"#fff", borderBottom:"1px solid #ddd8ce", padding:"14px 20px", display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:10 },
+    headerLeft: { display:"flex", flexDirection:"column" },
+    headerSub: { fontSize:11, letterSpacing:3, color:"#9a8a70", textTransform:"uppercase", marginBottom:2 },
+    headerTitle: { fontSize:15, color:"#6a5a40", fontStyle:"italic" },
+    qCounter: { textAlign:"right" },
+    qCountLabel: { fontSize:11, color:"#9a9a9a", letterSpacing:2, textTransform:"uppercase" },
+    qCountNum: { fontSize:22, color:"#b8962e", fontVariantNumeric:"tabular-nums" },
+    main: { flex:1, padding:"24px 20px", maxWidth:600, margin:"0 auto", width:"100%" },
+
+    // Intro
+    introWrap: { textAlign:"center", paddingTop:40 },
+    introEye: { fontSize:11, letterSpacing:4, color:"#9a8060", textTransform:"uppercase", marginBottom:16 },
+    introH: { fontSize:26, color:"#2a1a08", fontWeight:"normal", lineHeight:1.3, marginBottom:16 },
+    introP: { fontSize:14, color:"#6a6050", lineHeight:1.8, marginBottom:12 },
+    introP2: { fontSize:13, color:"#9a9088", lineHeight:1.8, marginBottom:36 },
+    beginBtn: { background:"transparent", border:"1px solid #b8962e", color:"#b8962e", padding:"14px 40px", fontSize:13, letterSpacing:2, textTransform:"uppercase", cursor:"pointer", borderRadius:2 },
+
+    // Scoreboard toggle (mobile)
+    scoreToggle: { background:"#fff", border:"1px solid #ddd8ce", borderRadius:4, padding:"10px 16px", fontSize:12, color:"#6a5a40", cursor:"pointer", width:"100%", display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16 },
+
+    // Scoreboard
+    scoreList: { background:"#fff", border:"1px solid #e0dbd4", borderRadius:4, padding:"16px", marginBottom:20 },
+    scoreLabel: { fontSize:10, letterSpacing:3, color:"#aaa", textTransform:"uppercase", marginBottom:12 },
+    scoreRow: { marginBottom:8 },
+    scoreMeta: { display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:3 },
+    scoreBar: { height:3, background:"#eee", borderRadius:2, overflow:"hidden" },
+
+    // Question
+    reasoning: { fontSize:12, color:"#9a8060", letterSpacing:1, textTransform:"uppercase", marginBottom:20, textAlign:"center", lineHeight:1.6 },
+    question: { fontSize:18, color:"#2a1a08", lineHeight:1.7, textAlign:"center", marginBottom:32, fontStyle:"italic" },
+    choices: { display:"flex", flexDirection:"column", gap:12 },
+    choiceBtn: { width:"100%", padding:"18px 20px", border:"1px solid #c8c0b4", background:"#fff", color:"#5a4a35", fontSize:15, cursor:"pointer", borderRadius:4, textAlign:"left", lineHeight:1.4, transition:"all 0.15s" },
+    choiceTag: { fontSize:10, letterSpacing:2, color:"#b0a898", display:"block", marginBottom:6, textTransform:"uppercase" },
+    status: { textAlign:"center", marginTop:20, fontSize:11, color:"#8a8a80", letterSpacing:2, textTransform:"uppercase" },
+
+    // Results
+    resultsTitle: { textAlign:"center", marginBottom:28 },
+    resultsSub: { fontSize:11, letterSpacing:4, color:"#9a8060", textTransform:"uppercase", marginBottom:10 },
+    resultsH: { fontSize:22, color:"#2a1a08", fontWeight:"normal", fontStyle:"italic" },
+    card: { background:"#fff", border:"1px solid #e0dbd4", borderRadius:4, padding:"18px 20px", marginBottom:14 },
+    cardLabel: { fontSize:11, letterSpacing:2, color:"#9a8060", textTransform:"uppercase", marginBottom:10 },
+    cardText: { fontSize:14, color:"#5a5050", lineHeight:1.8 },
+    rankMeta: { display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 },
+    rankCity: { fontSize:15, color:"#2a1a08" },
+    rankScore: { fontSize:12, color:"#aaa" },
+    rankReason: { fontSize:13, color:"#6a6060", lineHeight:1.7 },
+    restartBtn: { background:"transparent", border:"1px solid #d0c8bc", color:"#9a9090", padding:"12px 28px", fontSize:11, letterSpacing:2, textTransform:"uppercase", cursor:"pointer", borderRadius:2, display:"block", margin:"24px auto 0" },
+  };
+
+  return (
+    <div style={s.root}>
+      {/* Header */}
+      <div style={s.header}>
+        <div style={s.headerLeft}>
+          <span style={s.headerSub}>Retirement Destinations</span>
+          <span style={s.headerTitle}>Preference Revelation Engine</span>
+        </div>
+        {phase==="quiz" && (
+          <div style={s.qCounter}>
+            <div style={s.qCountLabel}>Question</div>
+            <div style={s.qCountNum}>{questionNum}<span style={{fontSize:13,color:"#ccc"}}>/30+</span></div>
+          </div>
+        )}
+      </div>
+
+      <div style={s.main}>
+
+        {/* ── INTRO ── */}
+        {phase==="intro" && (
+          <div style={s.introWrap}>
+            <div style={s.introEye}>Retirement City Quiz</div>
+            <h1 style={s.introH}>Reveal, Don't Report</h1>
+            <p style={s.introP}>Each question is a forced tradeoff. The quiz watches what you sacrifice — not what you claim to want.</p>
+            <p style={s.introP2}>Unlimited world search · Smart termination · Two variables per question · No city eliminated on a single answer</p>
+            <button style={s.beginBtn} onClick={start}
+              onTouchStart={e=>{ e.currentTarget.style.background="#b8962e"; e.currentTarget.style.color="#fff"; }}
+              onTouchEnd={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color="#b8962e"; }}>
+              Begin
+            </button>
+          </div>
+        )}
+
+        {/* ── QUIZ ── */}
+        {phase==="quiz" && (
+          <div>
+            {/* Preference panel toggle */}
+            <button style={s.scoreToggle} onClick={()=>setShowPanel(p=>!p)}>
+              <span>Preference Profile · Q{questionNum}</span>
+              <span style={{fontSize:12, color:"#b8962e"}}>{showPanel?"▲ Hide":"▼ Show"}</span>
+            </button>
+
+            {/* Preference weight tracker */}
+            {showPanel && (
+              <div style={s.scoreList}>
+                <div style={s.scoreLabel}>Dimensions Probed</div>
+                {DIMENSIONS.map(dim => {
+                  const count = dimCounts[dim] || 0;
+                  const strength = count === 0 ? "not yet" : count === 1 ? "once" : count === 2 ? "twice" : `${count}×`;
+                  const color = count === 0 ? "#ddd" : count === 1 ? "#9a8060" : "#b8962e";
+                  const pct = Math.min(100, (count / 4) * 100);
+                  return (
+                    <div key={dim} style={s.scoreRow}>
+                      <div style={s.scoreMeta}>
+                        <span style={{fontSize:11, color, letterSpacing:0.3}}>{dim}</span>
+                        <span style={{fontSize:10, color:"#bbb"}}>{strength}</span>
+                      </div>
+                      <div style={s.scoreBar}>
+                        <div style={{height:"100%", width:`${pct}%`, background:color, borderRadius:2, transition:"width 0.4s ease"}} />
+                      </div>
+                    </div>
+                  );
+                })}
+                <div style={{marginTop:10, paddingTop:8, borderTop:"1px solid #eee", fontSize:10, color:"#bbb"}}>
+                  Tier 1: {tierCountsRef.current?.tier1||0}/{MIN_TIER_1_COUNT} · Tier 2: {tierCountsRef.current?.tier2||0} · Tier 3: {tierCountsRef.current?.tier3||0}
+                </div>
+              </div>
+            )}
+
+            {/* Loading initial */}
+            {loading && !currentQ && (
+              <div style={{textAlign:"center", padding:"60px 0", color:"#9a8060", fontSize:13, letterSpacing:2}}>LOADING…</div>
+            )}
+
+            {/* Error */}
+            {error && (
+              <div style={{textAlign:"center", padding:"40px 0"}}>
+                <p style={{color:"#9a3a3a", fontSize:14, marginBottom:16}}>{error}</p>
+                <button onClick={()=>{
+                    // Dispatch retry based on which call failed. Previously this always
+                    // retried fetchQ, which meant a failed results call would incorrectly
+                    // fetch a 31st question instead of retrying the summary generation.
+                    const source = errorSourceRef.current;
+                    setSelected(null);
+                    setError(null);
+                    fetchingRef.current = false;
+                    if (source === "results" && lastHistRef.current) {
+                      fetchResults(lastHistRef.current);
+                    } else {
+                      fetchQ(conversationRef.current, questionNum);
+                    }
+                  }} style={{...s.restartBtn, color:"#9a3a3a", borderColor:"#c09090"}}>Retry</button>
+              </div>
+            )}
+
+            {/* Question */}
+            {currentQ && !error && (
+              <div>
+                <div style={{...s.reasoning, marginBottom:8}}>{currentQ.dimensionPair || ""}</div>
+                <div style={{...s.reasoning, fontSize:11, color:"#b0a898", marginBottom:20}}>{currentQ.reasoning}</div>
+                <div style={s.question}>{currentQ.question}</div>
+                <div style={s.choices}>
+                  {["A","B"].map(opt => {
+                    const label = opt==="A" ? currentQ.optionA : currentQ.optionB;
+                    const isSel = selected===opt;
+                    const isOth = selected && selected!==opt;
+                    return (
+                      <button key={opt} onClick={()=>choose(opt)} disabled={!!selected||loading}
+                        style={{...s.choiceBtn,
+                          background: isSel?"#b8962e" : isOth?"#f7f4ef":"#fff",
+                          color: isSel?"#fff" : isOth?"#ccc":"#5a4a35",
+                          borderColor: isSel?"#b8962e" : isOth?"#e8e4de":"#c8c0b4",
+                          opacity: isOth?0.5:1
+                        }}>
+                        <span style={{...s.choiceTag, color: isSel?"rgba(255,255,255,0.7)":undefined}}>
+                          {opt==="A" ? "Option A" : "Option B"}
+                        </span>
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {selected && (
+                  <div style={s.status}>
+                    {loading ? "···" : (questionNum>=30 ? "Calculating results…" : "Loading next question…")}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── RESULTS ── */}
+        {phase==="results" && results && (
+          <div>
+            <div style={s.resultsTitle}>
+              <div style={s.resultsSub}>Analysis Complete</div>
+              <h2 style={s.resultsH}>Your Revealed Preferences</h2>
+            </div>
+
+            <div style={{...s.card, borderLeft:"3px solid #b8962e"}}>
+              <div style={s.cardLabel}>Profile</div>
+              <p style={s.cardText}>{results.profileSummary}</p>
+            </div>
+
+            {results.keyTension && (
+              <div style={{...s.card, borderLeft:"3px solid #d0b87a"}}>
+                <div style={s.cardLabel}>Key Tension</div>
+                <p style={{...s.cardText, fontStyle:"italic", color:"#6a6060"}}>{results.keyTension}</p>
+              </div>
+            )}
+
+            {results.dimensionWeights && (
+              <div style={{...s.card, borderLeft:"3px solid #d0ccc8"}}>
+                <div style={s.cardLabel}>Dimension Weights</div>
+                <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:"6px 16px", marginTop:4}}>
+                  {Object.entries(results.dimensionWeights).map(([dim, weight]) => (
+                    <div key={dim} style={{display:"flex", justifyContent:"space-between", alignItems:"center", paddingBottom:4, borderBottom:"1px solid #f0ede8"}}>
+                      <span style={{fontSize:11, color:"#7a6a5a", textTransform:"capitalize"}}>{dim.replace(/([A-Z])/g,' $1').trim()}</span>
+                      <span style={{fontSize:10, color: weight==="non-negotiable"?"#b8962e": weight==="strongly preferred"?"#5a7a5a":"#aaa", letterSpacing:0.5, textAlign:"right"}}>{weight}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {(results.dealbreakers?.length > 0 || results.acceptedTradeoffs?.length > 0) && (
+              <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14}}>
+                {results.dealbreakers?.length > 0 && (
+                  <div style={{...s.card, borderLeft:"3px solid #c07070", margin:0}}>
+                    <div style={{...s.cardLabel, color:"#9a5050"}}>Rejected</div>
+                    {results.dealbreakers.map((d,i) => (
+                      <p key={i} style={{fontSize:12, color:"#7a5050", lineHeight:1.6, marginTop:i>0?6:0}}>— {d}</p>
+                    ))}
+                  </div>
+                )}
+                {results.acceptedTradeoffs?.length > 0 && (
+                  <div style={{...s.card, borderLeft:"3px solid #70907a", margin:0}}>
+                    <div style={{...s.cardLabel, color:"#506a58"}}>Accepted</div>
+                    {results.acceptedTradeoffs.map((t,i) => (
+                      <p key={i} style={{fontSize:12, color:"#507058", lineHeight:1.6, marginTop:i>0?6:0}}>— {t}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div style={{...s.card, borderLeft:"3px solid #4a6a9a", marginBottom:8}}>
+              <div style={{...s.cardLabel, color:"#4a6a9a", marginBottom:12}}>Search Prompt</div>
+              <p style={{fontSize:13, color:"#4a5060", lineHeight:1.8, marginBottom:16, fontStyle:"italic"}}>{results.searchPrompt}</p>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(results.searchPrompt).then(() => {
+                    const btn = document.getElementById('copyBtn');
+                    if (btn) { btn.textContent = 'Copied ✓'; setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000); }
+                  }).catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = results.searchPrompt;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    const btn = document.getElementById('copyBtn');
+                    if (btn) { btn.textContent = 'Copied ✓'; setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000); }
+                  });
+                }}
+                id="copyBtn"
+                style={{background:"#4a6a9a", border:"none", color:"#fff", padding:"10px 20px", fontSize:11, letterSpacing:2, textTransform:"uppercase", cursor:"pointer", borderRadius:2, width:"100%"}}
+              >Copy to Clipboard</button>
+            </div>
+
+            <button style={s.restartBtn} onClick={restart}>Restart</button>
+          </div>
+        )}
+
+        {/* Analyzing state */}
+        {phase==="quiz" && loading && questionNum>=30 && !results && (
+          <div style={{textAlign:"center", padding:"40px 0", color:"#9a8060", fontSize:13, letterSpacing:2}}>ANALYZING PREFERENCES…</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
