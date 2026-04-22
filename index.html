@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retirement Research</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --ink-light: #3d3d5c;
+    --ink-faint: #6b6b8a;
+    --paper: #f7f4ef;
+    --paper-warm: #ede8e0;
+    --paper-dark: #e2dbd0;
+    --accent: #8b2635;
+    --accent-light: #b5404e;
+    --accent-muted: #d4a0a6;
+    --rule: #c8c0b4;
+    --gold: #b8962e;
+    --gold-light: #d4b866;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px 40px 36px;
+    border-bottom: 4px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(184,150,46,0.04) 60px,
+      rgba(184,150,46,0.04) 61px
+    );
+    pointer-events: none;
+  }
+
+  .masthead-label {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--paper);
+    max-width: 720px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .masthead-sub {
+    font-size: 14px;
+    color: rgba(247,244,239,0.65);
+    font-style: italic;
+    max-width: 600px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  .intro {
+    margin-bottom: 60px;
+    color: var(--ink);
+    max-width: 680px;
+  }
+
+  .intro p {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--rule);
+    padding: 40px;
+    border-left: 4px solid var(--accent);
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 24px rgba(139, 38, 53, 0.12);
+    border-left-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .card h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .card p {
+    color: var(--ink-light);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    flex-grow: 1;
+  }
+
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    margin-top: auto;
+    transition: all 0.2s ease;
+  }
+
+  .card-link:hover {
+    color: var(--gold);
+    gap: 8px;
+  }
+
+  .card-link::after {
+    content: '→';
+    margin-left: 6px;
+    transition: margin-left 0.2s ease;
+  }
+
+  .card-link:hover::after {
+    margin-left: 12px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .masthead {
+      padding: 36px 24px 28px;
+    }
+
+    .container {
+      padding: 40px 24px;
+    }
+
+    .card {
+      padding: 28px;
+    }
+
+    .masthead h1 {
+      font-size: clamp(24px, 4vw, 36px);
+    }
+
+    .card-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-label">Research Series</div>
+  <h1>Retirement Destinations</h1>
+  <div class="masthead-sub">Comprehensive analysis of climate and political environments across North American retirement markets</div>
+</div>
+
+<div class="container">
+  <div class="intro">
+    <p>A curated exploration of retirement destinations from multiple analytical perspectives. Select a topic below to dive into detailed research on specific markets and regions.</p>
+  </div>
+
+  <div class="card-grid">
+    <a href="retirement_politics.html" class="card">
+      <div class="card-label">Political Research</div>
+      <h2>Political Stability & Governance</h2>
+      <p>An in-depth analysis of the political environments, institutional structures, and governance trajectories of major North American retirement destinations.</p>
+      <div class="card-link">Read the analysis</div>
+    </a>
+
+    <a href="retirement_weather.html" class="card">
+      <div class="card-label">Climate & Weather</div>
+      <h2>Climate Patterns & Weather</h2>
+      <p>A detailed examination of climate conditions, seasonal weather patterns, and long-term climate trends across key retirement markets.</p>
+      <div class="card-link">Read the analysis</div>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
