@@ -230,7 +230,8 @@
 
   .summary-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 0.82rem;
     line-height: 1.4;
   }
@@ -244,17 +245,25 @@
     text-align: left;
     background: var(--ink);
     color: var(--paper);
-    border: 1px solid #333;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
 
   .summary-table th:first-child {
     width: 130px;
+    position: sticky;
+    left: 0;
+    z-index: 3;
   }
 
   .summary-table td {
     padding: 0.6rem 0.8rem;
-    border: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
     vertical-align: top;
     color: #2a2820;
   }
@@ -274,6 +283,9 @@
     color: var(--ink);
     background: var(--cream) !important;
     white-space: nowrap;
+    position: sticky;
+    left: 0;
+    z-index: 1;
   }
 
   .summary-table td.city-name {
