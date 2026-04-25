@@ -350,6 +350,7 @@
   <button class="tab-btn" onclick="showTab('honolulu')">Honolulu</button>
   <button class="tab-btn" onclick="showTab('kansascity')">Kansas City</button>
   <button class="tab-btn" onclick="showTab('lisbon')">Lisbon</button>
+  <button class="tab-btn" onclick="showTab('madison')">Madison</button>
   <button class="tab-btn" onclick="showTab('medellin')">Medellín</button>
   <button class="tab-btn" onclick="showTab('philadelphia')">Philadelphia</button>
   <button class="tab-btn" onclick="showTab('portland')">Portland</button>
@@ -357,6 +358,7 @@
   <button class="tab-btn" onclick="showTab('sacramento')">Sacramento</button>
   <button class="tab-btn" onclick="showTab('toronto')">Toronto</button>
   <button class="tab-btn" onclick="showTab('virginiabeach')">Virginia Beach MSA</button>
+  <button class="tab-btn" onclick="showTab('york')">York</button>
 </nav>
 
 <!-- ===================== SUMMARY TAB ===================== -->
@@ -381,6 +383,7 @@
         <th>Honolulu</th>
         <th>Kansas City</th>
         <th>Lisbon</th>
+        <th>Madison</th>
         <th>Medellín</th>
         <th>Philadelphia</th>
         <th>Portland</th>
@@ -388,6 +391,7 @@
         <th>Sacramento</th>
         <th>Toronto</th>
         <th>Virginia Beach MSA</th>
+        <th>York</th>
       </tr>
     <tbody>
       <tr>
@@ -399,6 +403,7 @@
         <td>Tropical; warm year-round, two seasons</td>
         <td>Humid continental; extreme in both seasons</td>
         <td>Mediterranean-Atlantic; mild winters, dry summers</td>
+        <td>Humid continental (Dfa/Dfb boundary); hot summers, severe winters; four distinct seasons; no dry season; wide annual temperature range</td>
         <td>Tropical highland; "eternal spring," altitude-moderated</td>
         <td>Humid continental; hot humid summers, cold winters; mid-Atlantic position adds hurricane/nor'easter exposure</td>
         <td>Marine west coast; mild, wet winters, dry summers</td>
@@ -406,6 +411,7 @@
         <td>Hot-summer Mediterranean (Csa); dry summers (virtually no rain June–Sept); wet mild winters; Central Valley floor position traps heat, air pollutants, and tule fog; 2,696 hrs/yr sunshine</td>
         <td>Humid continental; cold winters, warm humid summers; Lake Ontario moderates extremes</td>
         <td>Humid subtropical (Cfa); four distinct seasons; Atlantic ocean moderates extremes; hot humid summers, mild winters; ~44–46 in/yr precipitation year-round; no true dry season</td>
+        <td>Humid subtropical (Cfa); hot humid summers, cool-to-cold winters; no dry season; precipitation year-round; ~45 in/yr; south-central Pennsylvania Piedmont position; wide annual temperature range</td>
       </tr>
       <tr>
         <td>Winter Severity</td>
@@ -416,6 +422,7 @@
         <td>None; avg Jan high 79°F; record low ever 52°F</td>
         <td>Real cold; avg Jan high 38°F; ice storms more consequential than snow</td>
         <td>Mild; avg Jan high 59°F; frost rare; Atlantic wind adds chill</td>
+        <td>Severe; avg Jan high 24°F, low 11°F; sub-zero overnight temperatures routine; Arctic outbreaks common; long cold season Nov–Mar; snow 40–45 in/yr</td>
         <td>None in conventional sense; avg Jan high ~82°F; coolest nights ~60°F</td>
         <td>Cold but moderate; avg Jan high 38°F; nor'easters can bring heavy snow; ice storms less frequent than Toronto; milder than Chicago</td>
         <td>Mild for latitude; avg Jan high 47°F; snow rare; persistent rain/gray</td>
@@ -423,6 +430,7 @@
         <td>Mild by temperature; avg Jan high 56°F, low 39°F; defining hazard is tule fog (Nov–Mar) not cold; fog persists 16–21+ consecutive days; virtually no meaningful snow; no extreme cold risk</td>
         <td>Cold; avg Jan high 28°F; ice storms more dangerous than snow; lake effect adds variability; wind chill episodes below −22°F</td>
         <td>Mild; avg Jan high 47–48°F, low 33–36°F; ~6 in/yr snowfall; oceanfront wind adds felt chill; nor'easters occasionally disruptive; record low −3°F (1985) but sub-20°F rare</td>
+        <td>Cold; avg Jan high 37–40°F, low 21–23°F; overnight lows below freezing through Dec–Feb; ~27 in/yr snowfall; freeze-thaw cycles routine; colder than U.S. avg for major metros</td>
       </tr>
       <tr>
         <td>Summer Heat</td>
@@ -433,6 +441,7 @@
         <td>Warm; avg high 87°F; trade winds moderate humidity most of year; heat index rising</td>
         <td>Hot and humid; avg July high 90°F; heat index 100–106°F common; 3-month outdoor limitation</td>
         <td>Warm and dry; avg high 83°F; African heat plumes push above 100°F in heat waves; dry summer air</td>
+        <td>Warm and humid; avg July high 79°F; dew points elevated; ~7 days/yr above 90°F historically; reliable overnight cooling in upper 50s–low 60s°F; thunderstorm activity common</td>
         <td>Warm but comfortable; avg high 79°F; humidity manageable; valley floor hotter</td>
         <td>Hot and humid; avg July high 87°F; heat index 100–110°F during events; urban heat island pronounced; 22°F variation between hottest and coolest neighborhoods</td>
         <td>Mild; avg July high 82°F; but 2021 heat dome hit 116°F; no AC in most homes</td>
@@ -440,6 +449,7 @@
         <td>Hot and dry; avg July high 94.6°F; heat index ~102°F; humidity 46%; ~15 days/yr &gt;100°F; Delta Breeze provides afternoon cooling 15–25°F most days; AC universal</td>
         <td>Warm and humid; avg July high 82°F; humidex regularly above 100°F; lake moderates but doesn't eliminate heat events</td>
         <td>Hot and humid; avg July high 87–88°F, low 73–74°F; heat index 98–103°F typical afternoon; overnight lows above 70°F common; sea breeze provides partial relief at oceanfront; AC essential</td>
+        <td>Hot and humid; avg July high 85–87°F, low 63–64°F; dew points upper 60s–low 70s°F; heat index exceeds dry-bulb significantly; ~12 days/yr above 90°F; convective afternoon thunderstorms common</td>
       </tr>
       <tr>
         <td>Sunshine / SAD Risk</td>
@@ -450,6 +460,7 @@
         <td>~3,315 hrs/yr; very low SAD risk; even the least sunny month exceeds U.S. mainland winter averages; essentially no concern</td>
         <td>~2,640 hrs/yr; low SAD risk; best annual sunshine of U.S. cities reviewed</td>
         <td>~2,800 hrs/yr; low SAD risk; one of sunniest European capitals; winter rain punctuated not chronic</td>
+        <td>~2,773 hrs/yr; moderate SAD risk; Jan only 3.3 hrs/day — below U.S. winter mean; Dec–Jan darkest months; short days at 43°N compound cloud cover; winter light deficit is real</td>
         <td>~2,555 hrs/yr; low SAD risk; rainy-season overcast is real but not chronic</td>
         <td>~2,500 hrs/yr; SAD Days Index 0.0; low SAD risk; winter can be gray but no month consistently exceeds threshold; 207 sunny days/yr</td>
         <td>~2,340 hrs/yr; high SAD risk; chronic winter gray similar to Seattle</td>
@@ -457,6 +468,7 @@
         <td>~3,495 hrs/yr; bimodal winter — either clear and bright or tule-fog-suppressed for weeks; SAD risk episodic not structural; most of year delivers abundant sunshine; low SAD risk for most</td>
         <td>~2,038 hrs/yr; moderate SAD risk; lake effect cloud adds to winter gray; Jan avg 3.3 hrs sunshine/day</td>
         <td>~2,695–2,707 hrs/yr; 213 sunny days/yr; SAD Days Index 0.0; low SAD risk; winter gray comes in weather-system episodes, not chronic overcast; December averages 5.4 hrs sunshine/day</td>
+        <td>~2,527–2,609 hrs/yr; ~201 sunny days/yr; SAD Days Index 0.0; low SAD risk; Jan averages 5.4 hrs/day; winter gray from storm systems, not chronic overcast; above U.S. average annual sunshine but well below Sun Belt</td>
       </tr>
       <tr>
         <td>Cold Health Risk</td>
@@ -467,6 +479,7 @@
         <td>Negligible</td>
         <td>Real but shorter duration than Chicago; ice storm power outage risk for elderly</td>
         <td>Negligible; frost rare</td>
+        <td>Significant; extended sub-zero cold; shoveling risk; cardiovascular strain; Arctic outbreaks; long cold season similar to Chicago in severity</td>
         <td>Negligible</td>
         <td>Moderate; colder than Lisbon, milder than Chicago; shoveling risk during nor'easters; brief but real cold events</td>
         <td>Low to moderate; cold rarely extreme; icy conditions are fall risk</td>
@@ -474,6 +487,7 @@
         <td>Low; cold rarely severe; extended tule fog inversions trap cold damp air at ground level; housing stock not built for sustained indoor cold; risk real during prolonged inversions but not acute</td>
         <td>Real; cardiovascular strain; shoveling risk; ice storm power outage risk; shorter extreme duration than Chicago</td>
         <td>Low to moderate; cold rarely extreme; Atlantic wind amplifies felt temperature at oceanfront; occasional nor'easter ice risk for falls; no meaningful shoveling risk most years</td>
+        <td>Real; freeze-thaw creates slip hazards; overnight lows below freezing through three months; shoveling risk; ice storms possible; colder and longer winter than most southeastern metro benchmarks</td>
       </tr>
       <tr>
         <td>Heat Health Risk</td>
@@ -484,6 +498,7 @@
         <td>Growing; heat index over 100°F documented; UV index 11–12 in summer; nearly half lack AC</td>
         <td>Serious and growing; heat index 100–106°F; concurrent ozone degradation; 3-month outdoor limit</td>
         <td>Serious and documented; 1,000+ heat deaths in 2022; elderly most vulnerable; most homes lack AC</td>
+        <td>Moderate and growing; ~7 days/yr above 90°F historically rising to ~38/yr by 2050; humid heat; overnight cooling generally adequate (upper 50s–low 60s°F); AC adoption high; university population vulnerable</td>
         <td>Low to moderate; valley floor neighborhoods warmer; humidity manageable with trade-off</td>
         <td>Serious; heat index events reaching 105–110°F documented; 49 daily high temperature records set since 2000; urban heat island creates 22°F intra-city variation; heat is the city's primary identified weather health risk</td>
         <td>Emerging risk; 2021 heat dome killed 69 in Multnomah County; no AC in most homes; AC penetration low</td>
@@ -491,6 +506,7 @@
         <td>Real and growing; ~15 days/yr above 100°F currently → projected ~30/yr by 2050; dry heat more tolerable but multi-day events with failing overnight cooling are high-risk; Delta Breeze can fail; AC universal</td>
         <td>Moderate and growing; humidex events recurring; 66 days above 30°C projected by 2040–2050; urban heat island significant</td>
         <td>Real and growing; heat index routinely 98–103°F July–Aug; overnight lows above 70°F limit body recovery; 30 days above 94°F projected by 2050 (vs. ~7 in 1990 baseline); AC universal in housing stock; ocean swimming is a functional heat management tool</td>
+        <td>Real and rising; ~12 days/yr above 90°F currently → projected 30+ days by 2050; highest projected heat risk among PA cities; humid heat with dew points upper 60s–low 70s°F; heat index routinely exceeds dry-bulb by 5–10°F</td>
       </tr>
       <tr>
         <td>Air Quality</td>
@@ -501,6 +517,7 @@
         <td>Vog (volcanic smog) from Kīlauea is unique recurring hazard; serious for respiratory conditions</td>
         <td>Moderate baseline; ozone action alerts concurrent with hottest days; summer air quality issue</td>
         <td>Generally good; wildfire smoke increasing in summer; inversions not a structural problem</td>
+        <td>Good; annual AQI 37–40 ("Good" EPA category); Grade A air quality; 130 good days in 2025; episodic wildfire smoke transport from regional fires; no structural inversion problem; better than ~60% of U.S. cities</td>
         <td>Significant; WHO top-10 in Latin America for PM2.5; 80% from vehicles; valley traps pollution; worst during inversion seasons</td>
         <td>Moderate; ozone alerts during summer heat events; vehicle and industrial sources; windier than inland cities which helps dispersal; no structural inversion problem</td>
         <td>Good baseline; wildfire smoke now impacts city most summers; valley inversion traps smoke; AQI 500+ in 2020</td>
@@ -508,6 +525,7 @@
         <td>Serious concern; top-5 nationally for ozone (American Lung Association); summer ground-level ozone is structural (valley geography traps pollutants); wildfire smoke growing seasonal threat; 2024 PM2.5 had no exceedances but EPA tightened standards</td>
         <td>Generally good; traffic and industrial baseline; smog events during summer heat; no structural inversion problem</td>
         <td>Generally good; Atlantic onshore breezes prevent inversion buildup; 10th consecutive year of improvement on fine particle pollution; ozone alerts during peak summer heat; NAS Oceana jet operations generate noise in flight corridors (not AQI concern); wildfire smoke not a significant risk</td>
+        <td>Moderate; AQI typically 50–70 ("Moderate" EPA category); manufacturing concentration in York County contributes PM2.5; more unhealthy days than cleaner-air metros; occasional wildfire smoke transport from distant fires; not among Pennsylvania's cleanest markets</td>
       </tr>
       <tr>
         <td>Extreme Weather / Natural Hazards</td>
@@ -518,6 +536,7 @@
         <td>Tsunami risk (1 per ~6 yrs historically); hurricane risk low but rising; flash flooding most frequent hazard; no tornado risk</td>
         <td>Tornadoes (April–June peak); hail; ice storms; flash flooding; 40–60 thunderstorm days/yr; most severe weather profile on list</td>
         <td>Earthquake/tsunami risk (1755 megaquake; medium ongoing risk); Atlantic storm flooding recurring; wildfire high hazard rating for region</td>
+        <td>Tornado exposure moderate (0.7 tornado days/yr avg); winter storms dominant cold-season hazard with Arctic outbreaks; ~16% of buildings have modeled flood risk; flash flooding documented at multiple downtown intersections; wildfire risk low (primary pathway is regional smoke transport)</td>
         <td>Landslides and flooding are recurring seasonal events, not rare; 1,000+ rain emergencies per season documented</td>
         <td>Flooding (primary hazard; Hurricanes Ida 2021, Isaias 2020, and nor'easters all cause recurring events); extreme heat (city's #1 identified weather risk); nor'easters (heavy snow, coastal flooding); occasional tornado; no significant earthquake or tsunami risk</td>
         <td>Cascadia subduction zone (megaquake/tsunami risk for Pacific Northwest); wildfire smoke; heat dome events; Columbia/Willamette flooding</td>
@@ -525,6 +544,7 @@
         <td>Nation's highest metropolitan flood risk (American and Sacramento Rivers confluence; 20 federal disaster declarations since 1950; "catastrophic flooding will occur, only question is when" — Central Valley Flood Protection Board 2022; 44% of buildings at some flood risk); no tornado/hurricane/earthquake risk</td>
         <td>Ice storms (2013 left 300,000 without power for up to 2 weeks); flash flooding (2005 and 2013 events caused $850M+ damage); lake effect snow; occasional tornadoes (typically weak)</td>
         <td>Hurricanes (direct strike ~once per decade; Isabel 2003 produced 4.7 ft storm surge); nor'easters (multiple per winter; coastal flooding and occasional heavy snow); sea level rise and land subsidence — fastest relative rise on the U.S. East Coast, 18 in over past century; sunny-day tidal flooding now routine in low-lying areas; no tornado, earthquake, or wildfire risk</td>
+        <td>Flooding is the dominant hazard; Codorus Creek runs through city center; Susquehanna Basin floods ~every 15 years on mainstem (14 times since 1810); Hurricane Agnes 1972: 13.5 in rain in 24 hrs, Codorus Creek split city; flash flooding at multiple downtown intersections; tornado risk moderate (mid-Atlantic); winter mix of snow/sleet/freezing rain</td>
       </tr>
       <tr>
         <td>Water Supply</td>
@@ -535,6 +555,7 @@
         <td>Island isolation amplifies any supply disruption; desalination supplement; container port vulnerability in hurricane scenario</td>
         <td>Missouri River alluvial aquifer provides buffer vs. surface reservoirs; drought affects 53% of weeks since 2000 at some level; reservoir sedimentation concern on Kansas side</td>
         <td>Surface-water dependent (Tagus system); drought frequency increasing; projected to face severe water stress by 2040 under current trajectory</td>
+        <td>22-well system, 30 reservoirs, 916 miles of pipe; PFAS detected at sub-regulatory levels in ~half of wells; Lake Monona shows elevated PFOS; fish consumption advisories on Lakes Monona, Waubesa, and Kegonsa; drinking water meets all standards; recreational water quality declining (2024: highest algae bloom rate on record)</td>
         <td>EPM utility rated among best in Latin America; 100% coverage; El Niño events cause periodic rationing in vulnerable areas</td>
         <td>Delaware River surface water; generally adequate; structurally vulnerable to salt intrusion from sea level rise plus drought — salt front could reach intakes by ~2060 under current trajectory; DRBC actively managing but long-term concern is real</td>
         <td>Bull Run Watershed (rain-fed, Mt. Hood National Forest); Columbia South Shore Well Field backup; summer streamflow declining; robust dual-source system</td>
@@ -542,6 +563,7 @@
         <td>Triple-source system (American River/Folsom Lake, Sacramento River, groundwater); $200M WaterFuture conjunctive-use program; 90,000+ AF Water Bank; multi-source advantage over single-source cities; long-term risks: Sierra snowpack decline (shifts precip from snow to rain), Delta saltwater intrusion from sea level rise</td>
         <td>Lake Ontario source; enormous reservoir; extremely drought resilient; aging distribution infrastructure is the primary concern; water level fluctuation a minor risk</td>
         <td>Lake Gaston pipeline (76-mile, up to 60 MGD) serves urban Virginia Beach; southern rural boroughs rely on shallow groundwater; drought risk moderate and stable through 2050; saltwater intrusion into shallow aquifers is a long-horizon concern tracking sea level rise; pipeline is single-point-of-failure infrastructure for northern city</td>
+        <td>York Water Company: Codorus Creek primary source (south/east branches); Lake Williams and Lake Redman (~2.23B gal combined capacity); Susquehanna River pumping station (15-mile pipeline, up to 12 MGD supplemental); drinking water meets all federal/state standards; recreational water quality of Codorus Creek historically degraded by agricultural/urban runoff</td>
       </tr>
       <tr>
         <td>Outdoor Lifestyle Window</td>
@@ -552,6 +574,7 @@
         <td>All 12 months; morning preference in summer; UV precautions year-round</td>
         <td>April–May and Sept–Oct excellent; June–Aug heat-limited; Jan–Feb cold-limited</td>
         <td>9–10 months excellent; July–Aug heat waves and Nov–Feb Atlantic storms are limits</td>
+        <td>May–Sept; Oct–Nov and March–April shoulder viable; Dec–Feb cold-limited; lake access extends summer outdoor season; ice skating and winter activities for those adapted; ~7 months fully comfortable</td>
         <td>All 12 months; morning preference; air quality bad days restrict outdoor activity</td>
         <td>April–May and Sept–Oct excellent; June–Aug heat-limited for midday exertion; Jan–Feb cold-limited; spring and fall are the standout seasons</td>
         <td>June–Sept excellent; Oct–May persistent gray and rain limit outdoor enjoyment even if temperatures are mild</td>
@@ -559,6 +582,7 @@
         <td>March–May and Oct–Nov excellent; June–Aug structured around Delta Breeze (outdoor before noon and after sunset); Dec–Feb tule fog limits; shoulder seasons drive farmers market and festival culture; ~8–9 months viable</td>
         <td>May–Oct excellent; Nov–Mar cold-limited; lakefront adds summer quality; ice storms periodically disrupt shoulder seasons</td>
         <td>10–11 months viable; Oct–Apr excellent for walking, cycling, outdoor activity; July–Aug heat and humidity limit midday exertion; ocean swimming viable May–Oct; boardwalk year-round asset; nor'easter events disrupt periodically Nov–Mar</td>
+        <td>April–May and Sept–Oct best; June–Aug heat and humidity limit midday outdoor exertion; Dec–Feb cold-limited; ~7–8 months viable; Codorus Creek greenway as urban trail asset; limited water recreation</td>
       </tr>
       <tr>
         <td>Resident Adaptation Culture</td>
@@ -569,6 +593,7 @@
         <td>Morning outdoor scheduling; beach proximity as thermal relief; time-shifting for UV and heat; low AC penetration is growing problem</td>
         <td>Tornado shelter culture deeply ingrained; weather alert monitoring in spring is habitual; aggressive municipal snow/ice response; summer is indoor season</td>
         <td>Outdoor plaza culture year-round; beach towns as summer relief; building stock lacks AC (individual investment required); fans and morning/evening scheduling</td>
+        <td>Matter-of-fact winter culture; strong cycling identity year-round (winter cycling normalized); lake-focused summer outdoor culture; indoor arts and university programming anchor winter social life; light therapy discussed but less pervasive than cities with chronic overcast</td>
         <td>Morning activity preference; SIATA alerts tracked routinely; neighborhood selection as climate strategy; no heating or cooling needed in well-located apartments</td>
         <td>Practical mid-Atlantic culture; SEPTA transit robust in most winter conditions; cooling centers activated during heat emergencies; flood preparedness normalized; Heatline system and public pool network used during summer events</td>
         <td>Outdoor culture year-round despite rain; rain gear not umbrellas; wildfire smoke monitoring now routine; minimal AC penetration creates heat wave vulnerability</td>
@@ -576,6 +601,7 @@
         <td>Outdoor life structured around Delta Breeze; HEPA air purifiers and N95 masks during wildfire smoke events now standard household equipment; air quality app monitoring routine during fire season; fog season accepted as behavioral normal; AC universal for summer heat</td>
         <td>Matter-of-fact winter culture; robust TTC transit through most conditions; PATH underground network downtown; warming centres well-established; emergency preparedness normalized post-2013</td>
         <td>Beach and coastal outdoor identity year-round; early morning activity peak in summer; hurricane preparedness is practiced annual ritual (go-bags, evacuation routes); flood zone awareness increasingly normalized; FEMA CRS Class 5 rating drives community-level flood management participation</td>
+        <td>Practical mid-Atlantic culture; flood awareness concentrated downtown (Codorus Creek corridor); winter storm preparedness standard; heat wave awareness developing; manufacturing-city identity shapes practical self-reliance norms</td>
       </tr>
       <tr>
         <td>Climate Change Trajectory</td>
@@ -586,6 +612,7 @@
         <td>Temperatures up 2.6°F since 1950; hot/humid days doubled in 10 yrs; hurricane track shifting toward islands; coral bleaching affects ecosystem resilience</td>
         <td>Among worst trajectories on list; extreme heat days projected to increase 5× by 2050 (7 to 38 days above 97°F); heavy rain doubling; governance response rated D+</td>
         <td>Among worst in Europe; heat wave mortality projected to nearly triple by mid-century; drought/water stress severe by 2040; wildfire season extending; 8 of 10 warmest years in last 20</td>
+        <td>Days above 90°F rising from ~7/yr to ~38/yr by 2050 (5× increase); annual precipitation modestly increasing with more in intense downpour events; ~16% of buildings at modeled flood risk; drought in 33% of weeks since 2000 despite wetting trend; "climate haven" framing partially valid (heat/drought/wildfire resilience) but complicated by cold/dark winters and rising flood intensity</td>
         <td>Extended rainy seasons with more intense downpours; extended dry periods increasing landslide risk via soil instability; El Niño/La Niña cycles intensifying</td>
         <td>Hotter, wetter, and more flood-prone; extreme heat events increasing in frequency and intensity; sea level rise accelerating faster than global average (6.7mm/yr 2000–2023); Delaware River salt intrusion risk materializing by mid-century; precipitation extremes intensifying</td>
         <td>Heat dome events becoming more frequent; wildfire smoke season extending; Bull Run summer streamflow declining; Cascadia earthquake risk unchanged; flooding risk from heavier precipitation increasing</td>
@@ -593,6 +620,7 @@
         <td>Days above 102°F rising from ~15/yr to projected ~30/yr by 2050; flooding risk worsening (atmospheric rivers intensifying already nation's highest flood exposure); Delta saltwater intrusion certain as sea level rises; tule fog declining (modest quality-of-life positive); structural flood exposure not eliminable by local action</td>
         <td>Days above 30°C projected to rise from 16 to 66 by 2040–2050; daily maximum rainfall projected to more than double by 2050; winters warming and shortening; freezing rain events may persist or increase despite milder average winters</td>
         <td>Sea level rise dominant trajectory; NOAA projects additional 15–18 in by 2050 regardless of emissions (locked in by existing concentrations plus ongoing land subsidence); heat days above 94°F rising from ~7 to ~30/yr by 2050; precipitation intensity increasing; tidal flooding events already multiplied 4× since 1960; Sea Level Wise adaptation program is nation's most comprehensive municipal response</td>
+        <td>PA projected to warm 5.9–7°F by 2050; York has HIGHEST projected heat risk among PA cities: 12 days above 90°F → 30+ days by 2050; intense precipitation events +8% by 2050 amplifying flood risk in already flood-prone Susquehanna watershed; wildfire risk low; dominant exposures: heat amplification and flood intensification</td>
       </tr>
       <tr>
         <td>Notable Unique Factor</td>
@@ -603,6 +631,7 @@
         <td>Vog is unique — no mainland equivalent; island isolation dramatically amplifies disaster consequence</td>
         <td>Weather variability is defining feature; 24–40°F swings in a single day documented; tornado culture shapes daily life in spring</td>
         <td>Building stock without AC or central heating is a structural vulnerability as climate changes; 1755 earthquake/tsunami has a direct analog in current seismic risk</td>
+        <td>Madison's isthmus position between Lakes Mendota and Monona creates genuinely exceptional inland water access for a continental U.S. city — but the "climate haven" narrative that circulates in popular media understates the severity of winters that rank among the coldest of any major U.S. metro</td>
         <td>Neighborhood elevation choice is the single most consequential climate decision; no AC or heating needed in most well-positioned homes</td>
         <td>Sea level rise is occurring faster in Philadelphia than the global average due to land subsidence — the Delaware Valley is sinking; the combination of this with climate-driven drought creates a salt intrusion risk for the drinking water supply with no documented equivalent in other major U.S. cities</td>
         <td>2021 heat dome (116°F) shattered records by 8 degrees and killed 69 locally — a system-level shock the city was entirely unprepared for; Cascadia megaquake risk is the dominant long-horizon hazard</td>
@@ -610,6 +639,7 @@
         <td>Sacramento's sunshine profile is paradoxically bimodal: most of the year delivers genuinely abundant bright sun ranking it among the sunniest U.S. cities, but winter tule fog events can suppress surface irradiance below Seattle-level thresholds for 2–3 consecutive weeks — making winter light delivery unpredictable in a way that neither reliably sunny nor reliably overcast climates produce</td>
         <td>Lake Ontario's northwest shore position spares Toronto from the worst lake-effect snow that hammers cities on the south/east shores; the 2013 ice storm (43 hours of freezing rain, 300,000 without power) remains the defining modern extreme weather event and a benchmark for infrastructure vulnerability</td>
         <td>Hampton Roads experiences the fastest rate of relative sea level rise on the U.S. East Coast — a combination of global ocean rise and active land subsidence, with land sinking at roughly twice the rate water is rising; this is not a future projection but a documented present condition that already produces routine sunny-day flooding in low-lying neighborhoods</td>
+        <td>York has been identified as having the highest projected heat risk among Pennsylvania cities — a distinction that stands out in a state not typically associated with extreme heat risk; combined with the city center's position on Codorus Creek in the Susquehanna watershed, flood and heat are both worsening simultaneously</td>
       </tr>
       <tr>
         <td>SAD Days Index †</td>
@@ -620,12 +650,14 @@
         <td>0.0</td>
         <td>0.0</td>
         <td>0.0</td>
+        <td>[pending]</td>
         <td>0.0</td>
         <td>0.0</td>
         <td>8.1</td>
         <td>0.0</td>
         <td>0.0</td>
         <td>[pending]</td>
+        <td>0.0</td>
         <td>0.0</td>
       </tr>
   </table>
@@ -829,6 +861,75 @@
       <p><strong>vs. Columbia, MO:</strong> Columbia has genuine winter, genuine summer humidity, and tornado season — none of which exist in Honolulu. Honolulu's outdoor lifestyle window is all 12 months versus Columbia's 5–6 genuinely comfortable months. Columbia has no significant seismic, tsunami, or vog exposure. The weather comparison heavily favors Honolulu; the risk and cost comparison introduces real trade-offs.</p>
       <p><strong>vs. Richland, WA:</strong> Richland's summer heat (regularly 100°F+) is dry and nominally hotter than Honolulu's; Richland's winters are genuinely cold. Honolulu has substantially better winter and spring/fall outdoor experience. Richland has no seismic, tsunami, or vog risk. The climates are so different as to represent entirely different lifestyle propositions.</p>
     </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== MADISON ===================== -->
+<div id="tab-madison" class="tab-panel">
+<div class="city-wrapper">
+
+  <button class="section-toggle open" onclick="toggleSection(this)">1. Climate Overview</button>
+  <div id="madison-s1" class="section-body open">
+    <p>Madison's climate is classified Köppen Dfa — humid continental with hot summers — sitting near the Dfb boundary. The defining feature is four highly distinct seasons separated by sharp transitions, with severe winters that regularly drop below 0°F and warm, humid summers. There is no dry season; precipitation is distributed across the calendar year with a slight summer maximum.</p>
+    <p>The city sits on a narrow isthmus between Lake Mendota and Lake Monona, which produces local lake-effect microclimate moderation but does not significantly buffer the deep continental cold of mid-winter. Annual temperature swings are wide by U.S. standards, with monthly mean highs ranging from the mid-20s°F in January to roughly 79°F in July.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">2. Summer Temperatures</button>
+  <div id="madison-s2" class="section-body">
+    <p>Summer is warm and humid. July is the warmest month, with average highs near 79°F and lows around 61°F; August follows closely at 77°F / 59°F, and June averages 75°F / 57°F. These values are slightly below the U.S. summer-high average for the same latitude band but feel warmer due to dewpoints typical of an interior continental location with abundant lake-driven moisture.</p>
+    <p>Extreme heat days above 90°F are historically uncommon (around 7 per year in the late 20th century), though projections show this rising substantially in coming decades. Overnight cooling is generally adequate, with summer lows commonly in the upper 50s to low 60s°F, allowing reliable nighttime temperature recovery — an important threshold for heat-health considerations.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">3. Winter Temperatures</button>
+  <div id="madison-s3" class="section-body">
+    <p>Winters are severe by U.S. standards. January averages a high of 24°F and a low of 11°F; February averages 28°F / 14°F, and December 28°F / 16°F. Sub-zero overnight temperatures are routine in the heart of winter, and Arctic air outbreaks regularly drive readings well below 0°F. January 2026 produced the coldest air locally observed in several years.</p>
+    <p>The cold season is long: meaningful freezing temperatures persist from late November through March, and the final spring freeze can occur into April. Winter cold of this depth — sustained subfreezing daytime highs across multiple months — places Madison at the cold end of the spectrum for major U.S. metropolitan areas.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">4. Precipitation</button>
+  <div id="madison-s4" class="section-body">
+    <p>Annual precipitation totals approximately 37 inches (936 mm), close to the U.S. national average of about 38 inches. May is the wettest month and February the driest, with the warm-season peak driven primarily by convective thunderstorm activity. Precipitation is well-distributed across the year, consistent with a humid continental classification.</p>
+    <p>Annual snowfall typically ranges from 40 to 45 inches, well above the U.S. average of approximately 28 inches. Snow cover is common from December through February and contributes to the cold winter feel by sustaining low surface albedo-driven heat loss. Extended periods of continuous snow cover are normal rather than exceptional.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">5. Sunshine &amp; Cloud Cover</button>
+  <div id="madison-s5" class="section-body">
+    <p>Annual sunshine totals approximately 2,773 hours, slightly above the U.S. average of roughly 2,500 hours. The seasonal distribution is highly uneven: summer months exceed 9 hours of sunshine per day, with June and July averaging 10 hours/day, while December and January fall to 4.0 and 3.3 hours/day respectively. November averages just 4 hours/day.</p>
+    <p>The winter daily sunshine average of 3.3 hours in January is below the U.S. winter mean and approaches thresholds associated with seasonal light deficits documented in clinical literature. Combined with short photoperiod at 43°N latitude, the November–January window produces extended periods of low solar irradiance that are characteristic of interior northern-tier U.S. cities.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">6. Extreme Weather</button>
+  <div id="madison-s6" class="section-body">
+    <p>Tornado exposure is moderate by Midwest standards, averaging approximately 0.7 tornado days per year. A historically notable F1 tornado directly struck western Madison during a regional outbreak. Severe thunderstorms with damaging winds and hail are the more common warm-season hazard.</p>
+    <p>Winter storms are the dominant cold-season hazard, with regular Arctic outbreaks and occasional major snow events. Flooding affects roughly 16% of Madison buildings according to risk modeling, and several downtown intersections have a documented history of flash flooding during intense rainfall. Wildfire risk is rated relatively low — approximately 81% of buildings carry some modeled wildfire exposure, but the dominant pathway is regional smoke transport rather than direct ignition.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">7. Air Quality</button>
+  <div id="madison-s7" class="section-body">
+    <p>Air quality is consistently good. The annual average AQI sits in the 37–40 range, well within the EPA "Good" category (0–50). In 2025 the city recorded 130 good days — about 72% of monitored days — with only one day classified as Unhealthy. Madison receives a Grade A air quality rating and ranks better than approximately 60% of U.S. cities on composite air-quality metrics.</p>
+    <p>The principal pollutants of concern are PM2.5 from vehicle traffic and periodic wildfire smoke transported from regional and continental sources. Episodic smoke events have become more frequent in recent years but have not displaced the overall good baseline.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">8. Water Access</button>
+  <div id="madison-s8" class="section-body">
+    <p>Madison sits on an isthmus between two large lakes — Lake Mendota (9,842 acres, 82 feet deep) and Lake Monona (3,274 acres, 64 feet deep) — with the broader Yahara chain (Wingra, Waubesa, Kegonsa) extending nearby. Direct daily water access is therefore unusually high among U.S. inland cities, with extensive shoreline parks, beaches, and recreational paths.</p>
+    <p>Drinking water is supplied from 22 wells through 30 reservoirs and 916 miles of pipe, and meets all federal and state standards. PFAS compounds have been detected at low (sub-regulatory) levels in roughly half of Madison's wells. Lake Monona shows elevated PFOS, and fish consumption advisories are in place for Lakes Monona, Waubesa, and Kegonsa. Recreational water quality has shown a measurable degradation trend: 2024 produced the highest algae bloom rate since monitoring began, and Mendota and Monona received "fair" ratings on phosphorus and clarity. Drinking water quality remains safe.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">9. Climate Change Projections</button>
+  <div id="madison-s9" class="section-body">
+    <p>Mid-century projections show pronounced warming. Days above 90°F are expected to rise from approximately 7 per year (circa 1990) to about 38 per year by 2050 — a five-fold increase. Hot nights above 70°F are projected to roughly quadruple over the same horizon, eroding the historical pattern of reliable overnight summer cooling.</p>
+    <p>Annual precipitation is projected to increase modestly, from about 32.8 to 34.9 inches, with the share falling as intense downpours rising from 42% to 46%. Approximately 16% of buildings carry modeled flood risk under current conditions. The Dane County watershed has experienced drought in 33% of weeks since 2000, indicating notable hydrologic variability alongside the wetting trend.</p>
+    <p>Madison is sometimes discussed publicly as a potential "climate haven" given Great Lakes-region water availability and comparatively low drought and direct wildfire risk. The framing is contested: while heat, drought, and wildfire resilience are real relative advantages, the cold-and-dark winter profile, increasing summer heat, and rising flood-event intensity all complicate the picture.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">10. Comparisons</button>
+  <div id="madison-s10" class="section-body">
+    <p>Against the four baseline cities, Madison's winters are significantly colder than San Diego, Seattle, Columbia MO, and Richland WA. January daily sunshine of 3.3 hours is well below San Diego's roughly 7 hours, slightly below Richland's roughly 4 hours, broadly comparable to Columbia MO's roughly 4 hours, and slightly above Seattle's 2–3 hours. Annual sunshine of approximately 2,773 hours sits above Seattle (~2,170) and Columbia MO (~2,600), and below San Diego (~3,300) and Richland (~2,900).</p>
+    <p>Summer heat is broadly comparable to Columbia MO and somewhat milder than the peak-summer conditions experienced in Richland WA, while clearly warmer and more humid than San Diego or Seattle summers. Air quality is notably good year-round and competitive with all four baseline cities.</p>
+    <p>Daily water access is dramatically superior to Columbia MO and Richland WA, given Madison's two large lakes flanking the urban core. It does not match the open-ocean access of San Diego or the Puget Sound exposure of Seattle, but among inland U.S. cities the lake access is exceptional. The "climate haven" framing holds against the four baselines for heat, drought, and wildfire resilience, but does not hold for cold or winter darkness, where Madison is the most challenged of the comparison set.</p>
   </div>
 
 </div>
@@ -2112,6 +2213,84 @@
       <p><strong>vs. Columbia, MO:</strong> Sacramento eliminates Columbia's tornado season, ice storms, and humid oppressive summers. Summer peak temperatures are comparable (94°F vs. 89°F average July high), but Sacramento's heat is dry and moderated by the Delta Breeze while Columbia's is humid and stagnant. Columbia has no meaningful flood risk at Sacramento's scale and no structural air quality problem comparable to Sacramento's ozone ranking. Columbia gets real winter cold that Sacramento does not. The trade is continental-interior storm and cold exposures against valley-floor flood, fog, and ozone exposures.</p>
       <p><strong>vs. Richland, WA:</strong> The summer profiles are strikingly similar — both cities average roughly 94°F July highs with low humidity and dry-summer patterns. Winters diverge: Sacramento averages a 56°F January high and 24 inches of annual precipitation; Richland averages a 37°F January high and 8 inches. Richland gets real snow and bright, cold, clear winters; Sacramento gets no meaningful snow but extended periods of mild fogged-in gray. Richland has no comparable flood or ozone exposure. For a retiree weighing winter light reliability against winter mildness, the two cities represent a direct trade.</p>
     </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== YORK ===================== -->
+<div id="tab-york" class="tab-panel">
+<div class="city-wrapper">
+
+  <button class="section-toggle open" onclick="toggleSection(this)">1. Climate Overview</button>
+  <div id="york-s1" class="section-body open">
+    <p>York carries a Köppen Cfa classification (humid subtropical), defined by hot, humid summers and cool-to-cold winters with no dry season. The city lies in south-central Pennsylvania within the Piedmont region at an elevation of roughly 400 feet, well inland from any large body of water.</p>
+    <p>Without significant marine moderation, York's climate follows inland continental patterns: a wide annual temperature range, year-round precipitation, and a clear four-season profile. Codorus Creek runs through the city center, and the Susquehanna River lies approximately 15 miles to the west, but neither produces meaningful thermal buffering at the city scale.</p>
+    <p>Compared with the U.S. average climate, York is slightly warmer in summer, slightly cooler in winter, and substantially wetter year-round. The Cfa classification is shared with much of the U.S. mid-Atlantic and Southeast and is distinct from the Mediterranean (Csa/Csb) climate type, which features dry summers.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">2. Summer Temperatures</button>
+  <div id="york-s2" class="section-body">
+    <p>July is the warmest month, with average highs of 85–87°F and average lows of 63–64°F. August stays warm at roughly 84°F highs and 62°F lows, while June averages 82°F highs and 61°F lows. These values place York summers slightly above the U.S. average for daily highs in the peak months.</p>
+    <p>Summer humidity is a defining feature of the Cfa climate, with dew points commonly in the upper 60s to low 70s°F during July and August, which substantially raises the heat index above the dry-bulb temperature. Convective afternoon and evening thunderstorms are common, contributing both to peak-hour cooling and to flood risk.</p>
+    <p>The city currently averages roughly 12 days per year above 90°F, meaningfully fewer than continental interior cities further south but more than coastal Pacific climates. Heat humidity combinations during the warmest weeks routinely produce conditions that exceed comfort thresholds for outdoor exertion.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">3. Winter Temperatures</button>
+  <div id="york-s3" class="section-body">
+    <p>January is the coldest month, with average highs of 37–40°F and average lows of 21–23°F. February averages 43°F highs and 25°F lows, while December sees 42°F highs and 25°F lows. Winter overnight lows routinely fall below freezing through December, January, and February.</p>
+    <p>By mid-March, daily highs rise into the low 50s°F and overnight lows climb into the low 30s°F, marking the transition out of the deepest winter. November transitions from autumn into early winter with highs near 54°F and lows near 34°F.</p>
+    <p>York's winters are colder than the U.S. average for major metropolitan areas and well below any Mediterranean climate benchmark. Multiple consecutive months feature daily mean temperatures below the 50°F threshold often used as a marker for "mild winter" climates, and freeze-thaw cycles are routine.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">4. Precipitation</button>
+  <div id="york-s4" class="section-body">
+    <p>Annual precipitation totals approximately 45 inches, above the U.S. national average of about 30 inches. Precipitation falls year-round with no pronounced dry season — a defining characteristic of the Cfa climate type — and September is typically the wettest month, in part because of tropical-system remnants.</p>
+    <p>Annual snowfall averages approximately 27 inches, slightly below the U.S. average of about 28 inches and well above southern Cfa regions. Snow events are typically distributed across December through March, with occasional significant storms producing larger single-event totals.</p>
+    <p>Summer precipitation is dominated by convective thunderstorms, which can deliver high-intensity rainfall in short windows. Winter storms produce a mix of snow, sleet, and freezing rain depending on temperature profiles, contributing to ice-related hazards for travel and infrastructure.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">5. Sunshine &amp; Cloud Cover</button>
+  <div id="york-s5" class="section-body">
+    <p>York averages approximately 2,527–2,609 sunshine hours per year, with roughly 201 sunny days annually. This is somewhat above the U.S. average annual sunshine total of about 2,500 hours but well below the levels typical of arid Western or Mediterranean climates, which often exceed 3,000 hours.</p>
+    <p>Daily sunshine peaks in July at around 11.0 hours per day and reaches secondary highs of 9.5 hours per day in June and August. May (8.5) and April (7.5) are also strong sunshine months as the warm season builds.</p>
+    <p>Winter sunshine drops substantially: December averages just 4.1 hours per day, January 5.4 hours, February 5.5 hours, and November 5.0 hours. These winter values reflect both shorter days and frequent cloud cover from mid-latitude storm systems crossing the region, putting winter solar irradiance well below the levels associated with sun-reliable climates.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">6. Extreme Weather</button>
+  <div id="york-s6" class="section-body">
+    <p>Flooding represents the dominant extreme-weather hazard. Codorus Creek runs through the city center, and York County sits within the Susquehanna River Basin — one of the most flood-prone watersheds in the United States. The Susquehanna mainstem has flooded 14 times since 1810, roughly every 15 years on average, and the basin averages approximately $150 million in annual flood damage.</p>
+    <p>The benchmark event remains Hurricane Agnes in 1972, which dropped 13.5 inches of rain in 24 hours and caused Codorus Creek to split the city in two. Flash flooding regularly affects multiple downtown intersections during heavy convective storms, and ice jam flooding during winter thaw events represents an additional seasonal hazard.</p>
+    <p>Tornado risk exists at moderate mid-Atlantic levels, lower in frequency than continental Midwest tornado-alley regions but non-trivial during severe convective episodes. Heat extremes are an emerging hazard: York has been identified as having the highest projected heat risk among Pennsylvania cities, with current averages of about 12 days per year over 90°F projected to rise to 30 or more days by 2050.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">7. Air Quality</button>
+  <div id="york-s7" class="section-body">
+    <p>York's Air Quality Index typically falls in the moderate range, with common readings around 50–70 — within the EPA's "Moderate" category, where unusually sensitive individuals may experience respiratory effects. The city does not rank among Pennsylvania's cleaner-air markets.</p>
+    <p>Manufacturing concentration in York County contributes to particulate (PM2.5) burden, with industrial emissions joining vehicle emissions and regional transport from the broader mid-Atlantic airshed. The city records more unhealthy air days per year than cleaner U.S. metro benchmarks, particularly during summer ozone episodes.</p>
+    <p>Wildfire smoke transport from Canadian or western U.S. fires can episodically degrade air quality further during peak fire seasons, although direct local wildfire risk is low. Overall air quality is acceptable for most residents but represents a meaningful negative differential against the cleanest U.S. metro areas.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">8. Water Access</button>
+  <div id="york-s8" class="section-body">
+    <p>York Water Company supplies drinking water drawn primarily from Codorus Creek, supported by two reservoirs — Lake Williams and Lake Redman — with a combined capacity of approximately 2.23 billion gallons. A Susquehanna River pumping station with up to 12 million gallons per day capacity, fed via a 15-mile pipeline, provides supplemental supply. Drinking water meets all federal and state standards.</p>
+    <p>Recreational water access is limited. Codorus Creek flows through the city center but is a small, channelized urban stream offering minimal recreational amenity. There is no major lake, bay, or ocean within the city or immediate metro area, and the Susquehanna River roughly 15 miles west provides no waterfront amenity for city residents on a daily basis.</p>
+    <p>Codorus Creek's recreational water quality has historically been degraded by agricultural and urban runoff in the watershed. For a retiree prioritizing meaningful daily water access — coastline, large lake, or navigable river — York's water-amenity profile is weak by national standards.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">9. Climate Change Projections</button>
+  <div id="york-s9" class="section-body">
+    <p>Pennsylvania is projected to warm by approximately 5.9 to 7°F by 2050 under current emissions trajectories. York specifically has been identified as having the highest heat risk among Pennsylvania cities, with the current 12 days per year above 90°F projected to rise to 30 or more days per year by 2050 — a roughly 2.5x increase in extreme heat days.</p>
+    <p>Intense precipitation events are projected to increase by approximately 8% by 2050, amplifying flood risk in the Susquehanna watershed where storm intensification interacts with already flood-prone topography. Codorus Creek's confined urban channel makes flash-flood escalation a particular concern for the city center.</p>
+    <p>Direct wildfire risk remains low, though smoke transport events from distant fires are likely to continue and may intensify with broader regional warming. The dominant climate-change exposures for York are heat amplification and flood intensification rather than drought or wildfire.</p>
+  </div>
+
+  <button class="section-toggle" onclick="toggleSection(this)">10. Comparisons</button>
+  <div id="york-s10" class="section-body">
+    <p>Against the four baseline cities, York's winters are milder than Columbia MO and Richland WA, comparable to or slightly colder than Seattle, and much colder than San Diego. January average highs of 37–40°F sit well above the deeper continental winters of the inland baselines but below San Diego's mild Mediterranean winter regime.</p>
+    <p>Summer climate runs hotter and more humid than San Diego and Seattle, comparable to Columbia MO in temperature and humidity, and cooler than Richland WA's hottest peak summer days, although Richland's dry-heat profile differs sharply from York's humid heat. January sunshine of approximately 5.4 hours per day exceeds Seattle, falls below San Diego, and is similar to Columbia MO and Richland WA.</p>
+    <p>Annual sunshine totals near 2,600 hours sit well below San Diego (~3,300 hours) and Richland WA (~2,900 hours), above Seattle (~2,170 hours), and broadly similar to Columbia MO. Water access is a significant weakness: York has no ocean, no bay, and no large lake, making it materially inferior to San Diego and Seattle on water amenity, while Codorus Creek offers minimal recreational value compared with Columbia MO's river access or Richland WA's Columbia River frontage.</p>
+    <p>Flood risk is notably higher than at any of the four baseline cities, driven by Codorus Creek and the broader Susquehanna basin. Air quality is moderate — better than some heavily industrial markets but not as clean as the Pacific baseline cities of San Diego and Seattle.</p>
   </div>
 
 </div>
