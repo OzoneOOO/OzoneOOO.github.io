@@ -352,6 +352,7 @@
   <button class="tab-btn" onclick="showTab('medellin')">Medellín</button>
   <button class="tab-btn" onclick="showTab('philadelphia')">Philadelphia</button>
   <button class="tab-btn" onclick="showTab('portland')">Portland</button>
+  <button class="tab-btn" onclick="showTab('richmond')">Richmond</button>
   <button class="tab-btn" onclick="showTab('sacramento')">Sacramento</button>
   <button class="tab-btn" onclick="showTab('toronto')">Toronto</button>
   <button class="tab-btn" onclick="showTab('virginiabeach')">Virginia Beach MSA</button>
@@ -382,6 +383,8 @@
         <th>Medellín</th>
         <th>Philadelphia</th>
         <th>Portland</th>
+        <th>Richmond</th>
+        <th>Sacramento</th>
         <th>Toronto</th>
         <th>Virginia Beach MSA</th>
       </tr>
@@ -398,6 +401,8 @@
         <td>Tropical highland; "eternal spring," altitude-moderated</td>
         <td>Humid continental; hot humid summers, cold winters; mid-Atlantic position adds hurricane/nor'easter exposure</td>
         <td>Marine west coast; mild, wet winters, dry summers</td>
+        <td>Humid subtropical (Cfa); four distinct seasons; no dry season; 44 in/yr precipitation year-round; Piedmont position between Blue Ridge and Coastal Plain; frontal variability drives week-to-week unpredictability</td>
+        <td>Hot-summer Mediterranean (Csa); dry summers (virtually no rain June–Sept); wet mild winters; Central Valley floor position traps heat, air pollutants, and tule fog; 2,696 hrs/yr sunshine</td>
         <td>Humid continental; cold winters, warm humid summers; Lake Ontario moderates extremes</td>
         <td>Humid subtropical (Cfa); four distinct seasons; Atlantic ocean moderates extremes; hot humid summers, mild winters; ~44–46 in/yr precipitation year-round; no true dry season</td>
       </tr>
@@ -413,6 +418,8 @@
         <td>None in conventional sense; avg Jan high ~82°F; coolest nights ~60°F</td>
         <td>Cold but moderate; avg Jan high 38°F; nor'easters can bring heavy snow; ice storms less frequent than Toronto; milder than Chicago</td>
         <td>Mild for latitude; avg Jan high 47°F; snow rare; persistent rain/gray</td>
+        <td>Mild-to-moderate; avg Jan high 47°F, low 30°F; primary hazard is freezing rain and ice storms, not deep cold or heavy snow; ~8.8 in/yr snowfall; January 2025 and 2026 both produced notable ice events; infrastructure underprepared for sustained icing</td>
+        <td>Mild by temperature; avg Jan high 56°F, low 39°F; defining hazard is tule fog (Nov–Mar) not cold; fog persists 16–21+ consecutive days; virtually no meaningful snow; no extreme cold risk</td>
         <td>Cold; avg Jan high 28°F; ice storms more dangerous than snow; lake effect adds variability; wind chill episodes below −22°F</td>
         <td>Mild; avg Jan high 47–48°F, low 33–36°F; ~6 in/yr snowfall; oceanfront wind adds felt chill; nor'easters occasionally disruptive; record low −3°F (1985) but sub-20°F rare</td>
       </tr>
@@ -428,6 +435,8 @@
         <td>Warm but comfortable; avg high 79°F; humidity manageable; valley floor hotter</td>
         <td>Hot and humid; avg July high 87°F; heat index 100–110°F during events; urban heat island pronounced; 22°F variation between hottest and coolest neighborhoods</td>
         <td>Mild; avg July high 82°F; but 2021 heat dome hit 116°F; no AC in most homes</td>
+        <td>Hot and humid; avg July high 90.9°F; heat index 107.6°F; humidity 68%; 43 days/yr ≥90°F; overnight lows in low-to-mid 70s limit nocturnal recovery; AC universal; no reliable afternoon cooling mechanism</td>
+        <td>Hot and dry; avg July high 94.6°F; heat index ~102°F; humidity 46%; ~15 days/yr &gt;100°F; Delta Breeze provides afternoon cooling 15–25°F most days; AC universal</td>
         <td>Warm and humid; avg July high 82°F; humidex regularly above 100°F; lake moderates but doesn't eliminate heat events</td>
         <td>Hot and humid; avg July high 87–88°F, low 73–74°F; heat index 98–103°F typical afternoon; overnight lows above 70°F common; sea breeze provides partial relief at oceanfront; AC essential</td>
       </tr>
@@ -443,6 +452,8 @@
         <td>~2,555 hrs/yr; low SAD risk; rainy-season overcast is real but not chronic</td>
         <td>~2,500 hrs/yr; SAD Days Index 0.0; low SAD risk; winter can be gray but no month consistently exceeds threshold; 207 sunny days/yr</td>
         <td>~2,340 hrs/yr; high SAD risk; chronic winter gray similar to Seattle</td>
+        <td>~2,696 hrs/yr; moderate SAD risk; winter light deprivation from frontal cloud cover, not chronic marine overcast; December averages 5.1 hrs sunshine/day; latitude adequate; episodes of gray but no chronic suppression</td>
+        <td>~3,495 hrs/yr; bimodal winter — either clear and bright or tule-fog-suppressed for weeks; SAD risk episodic not structural; most of year delivers abundant sunshine; low SAD risk for most</td>
         <td>~2,038 hrs/yr; moderate SAD risk; lake effect cloud adds to winter gray; Jan avg 3.3 hrs sunshine/day</td>
         <td>~2,695–2,707 hrs/yr; 213 sunny days/yr; SAD Days Index 0.0; low SAD risk; winter gray comes in weather-system episodes, not chronic overcast; December averages 5.4 hrs sunshine/day</td>
       </tr>
@@ -458,6 +469,8 @@
         <td>Negligible</td>
         <td>Moderate; colder than Lisbon, milder than Chicago; shoveling risk during nor'easters; brief but real cold events</td>
         <td>Low to moderate; cold rarely extreme; icy conditions are fall risk</td>
+        <td>Moderate; falls on ice are primary concern; multi-day power outages during ice storms create hypothermia risk; not extreme cold but recurring ice-and-slip hazard; January 2025 water crisis compounded winter vulnerability</td>
+        <td>Low; cold rarely severe; extended tule fog inversions trap cold damp air at ground level; housing stock not built for sustained indoor cold; risk real during prolonged inversions but not acute</td>
         <td>Real; cardiovascular strain; shoveling risk; ice storm power outage risk; shorter extreme duration than Chicago</td>
         <td>Low to moderate; cold rarely extreme; Atlantic wind amplifies felt temperature at oceanfront; occasional nor'easter ice risk for falls; no meaningful shoveling risk most years</td>
       </tr>
@@ -473,6 +486,8 @@
         <td>Low to moderate; valley floor neighborhoods warmer; humidity manageable with trade-off</td>
         <td>Serious; heat index events reaching 105–110°F documented; 49 daily high temperature records set since 2000; urban heat island creates 22°F intra-city variation; heat is the city's primary identified weather health risk</td>
         <td>Emerging risk; 2021 heat dome killed 69 in Multnomah County; no AC in most homes; AC penetration low</td>
+        <td>Real and growing; heat index 107.6°F average July; overnight lows above 70°F during heat waves limit body recovery; humid heat more dangerous than dry heat at same temperature; projected ~39 days/yr above 95°F by 2050 (from ~7 currently)</td>
+        <td>Real and growing; ~15 days/yr above 100°F currently → projected ~30/yr by 2050; dry heat more tolerable but multi-day events with failing overnight cooling are high-risk; Delta Breeze can fail; AC universal</td>
         <td>Moderate and growing; humidex events recurring; 66 days above 30°C projected by 2040–2050; urban heat island significant</td>
         <td>Real and growing; heat index routinely 98–103°F July–Aug; overnight lows above 70°F limit body recovery; 30 days above 94°F projected by 2050 (vs. ~7 in 1990 baseline); AC universal in housing stock; ocean swimming is a functional heat management tool</td>
       </tr>
@@ -488,6 +503,8 @@
         <td>Significant; WHO top-10 in Latin America for PM2.5; 80% from vehicles; valley traps pollution; worst during inversion seasons</td>
         <td>Moderate; ozone alerts during summer heat events; vehicle and industrial sources; windier than inland cities which helps dispersal; no structural inversion problem</td>
         <td>Good baseline; wildfire smoke now impacts city most summers; valley inversion traps smoke; AQI 500+ in 2020</td>
+        <td>Moderate concern; ozone grade B, 165th worst nationally, 4th consecutive year improving; PM2.5 worsening — 98th worst (from 116th), driven by wildfire smoke; summer ozone peaks June–Sept; winter inversions degrade PM2.5</td>
+        <td>Serious concern; top-5 nationally for ozone (American Lung Association); summer ground-level ozone is structural (valley geography traps pollutants); wildfire smoke growing seasonal threat; 2024 PM2.5 had no exceedances but EPA tightened standards</td>
         <td>Generally good; traffic and industrial baseline; smog events during summer heat; no structural inversion problem</td>
         <td>Generally good; Atlantic onshore breezes prevent inversion buildup; 10th consecutive year of improvement on fine particle pollution; ozone alerts during peak summer heat; NAS Oceana jet operations generate noise in flight corridors (not AQI concern); wildfire smoke not a significant risk</td>
       </tr>
@@ -503,6 +520,8 @@
         <td>Landslides and flooding are recurring seasonal events, not rare; 1,000+ rain emergencies per season documented</td>
         <td>Flooding (primary hazard; Hurricanes Ida 2021, Isaias 2020, and nor'easters all cause recurring events); extreme heat (city's #1 identified weather risk); nor'easters (heavy snow, coastal flooding); occasional tornado; no significant earthquake or tsunami risk</td>
         <td>Cascadia subduction zone (megaquake/tsunami risk for Pacific Northwest); wildfire smoke; heat dome events; Columbia/Willamette flooding</td>
+        <td>James River flooding (primary; Hurricane Gaston 2004 killed 9, condemned 20 blocks in Shockoe Bottom; 14% of buildings at flood risk); ice storms (recurring; Jan 2025 and Jan 2026 both notable); hurricane inland flooding mid-Aug to mid-Oct; tornado risk low; earthquake low</td>
+        <td>Nation's highest metropolitan flood risk (American and Sacramento Rivers confluence; 20 federal disaster declarations since 1950; "catastrophic flooding will occur, only question is when" — Central Valley Flood Protection Board 2022; 44% of buildings at some flood risk); no tornado/hurricane/earthquake risk</td>
         <td>Ice storms (2013 left 300,000 without power for up to 2 weeks); flash flooding (2005 and 2013 events caused $850M+ damage); lake effect snow; occasional tornadoes (typically weak)</td>
         <td>Hurricanes (direct strike ~once per decade; Isabel 2003 produced 4.7 ft storm surge); nor'easters (multiple per winter; coastal flooding and occasional heavy snow); sea level rise and land subsidence — fastest relative rise on the U.S. East Coast, 18 in over past century; sunny-day tidal flooding now routine in low-lying areas; no tornado, earthquake, or wildfire risk</td>
       </tr>
@@ -518,6 +537,8 @@
         <td>EPM utility rated among best in Latin America; 100% coverage; El Niño events cause periodic rationing in vulnerable areas</td>
         <td>Delaware River surface water; generally adequate; structurally vulnerable to salt intrusion from sea level rise plus drought — salt front could reach intakes by ~2060 under current trajectory; DRBC actively managing but long-term concern is real</td>
         <td>Bull Run Watershed (rain-fed, Mt. Hood National Forest); Columbia South Shore Well Field backup; summer streamflow declining; robust dual-source system</td>
+        <td>James River single source; treatment plants built 1924 and 1950; January 2025 crisis: blizzard-triggered power failure, 5-day boil water advisory, VDH and EPA cited city for negligence (single point of failure, deferred maintenance); Cobb's Creek Reservoir (14.8B gallon, filled May 2024) adds drought resilience; aging infrastructure formally documented</td>
+        <td>Triple-source system (American River/Folsom Lake, Sacramento River, groundwater); $200M WaterFuture conjunctive-use program; 90,000+ AF Water Bank; multi-source advantage over single-source cities; long-term risks: Sierra snowpack decline (shifts precip from snow to rain), Delta saltwater intrusion from sea level rise</td>
         <td>Lake Ontario source; enormous reservoir; extremely drought resilient; aging distribution infrastructure is the primary concern; water level fluctuation a minor risk</td>
         <td>Lake Gaston pipeline (76-mile, up to 60 MGD) serves urban Virginia Beach; southern rural boroughs rely on shallow groundwater; drought risk moderate and stable through 2050; saltwater intrusion into shallow aquifers is a long-horizon concern tracking sea level rise; pipeline is single-point-of-failure infrastructure for northern city</td>
       </tr>
@@ -533,6 +554,8 @@
         <td>All 12 months; morning preference; air quality bad days restrict outdoor activity</td>
         <td>April–May and Sept–Oct excellent; June–Aug heat-limited for midday exertion; Jan–Feb cold-limited; spring and fall are the standout seasons</td>
         <td>June–Sept excellent; Oct–May persistent gray and rain limit outdoor enjoyment even if temperatures are mild</td>
+        <td>April–May and Sept–Oct excellent; June–Aug heat and humidity limit midday exertion; Jan–Feb ice and cold limit; James River parks and trails are active recreation anchors year-round; ~7–8 months viable</td>
+        <td>March–May and Oct–Nov excellent; June–Aug structured around Delta Breeze (outdoor before noon and after sunset); Dec–Feb tule fog limits; shoulder seasons drive farmers market and festival culture; ~8–9 months viable</td>
         <td>May–Oct excellent; Nov–Mar cold-limited; lakefront adds summer quality; ice storms periodically disrupt shoulder seasons</td>
         <td>10–11 months viable; Oct–Apr excellent for walking, cycling, outdoor activity; July–Aug heat and humidity limit midday exertion; ocean swimming viable May–Oct; boardwalk year-round asset; nor'easter events disrupt periodically Nov–Mar</td>
       </tr>
@@ -548,6 +571,8 @@
         <td>Morning activity preference; SIATA alerts tracked routinely; neighborhood selection as climate strategy; no heating or cooling needed in well-located apartments</td>
         <td>Practical mid-Atlantic culture; SEPTA transit robust in most winter conditions; cooling centers activated during heat emergencies; flood preparedness normalized; Heatline system and public pool network used during summer events</td>
         <td>Outdoor culture year-round despite rain; rain gear not umbrellas; wildfire smoke monitoring now routine; minimal AC penetration creates heat wave vulnerability</td>
+        <td>AC universal; morning/evening outdoor scheduling in summer; James River parks active recreation anchor; stock-up-and-stay-home ice storm protocol; flood zone awareness growing in Shockoe Bottom/riverside areas; wildfire smoke adaptation emerging but less developed than Western cities</td>
+        <td>Outdoor life structured around Delta Breeze; HEPA air purifiers and N95 masks during wildfire smoke events now standard household equipment; air quality app monitoring routine during fire season; fog season accepted as behavioral normal; AC universal for summer heat</td>
         <td>Matter-of-fact winter culture; robust TTC transit through most conditions; PATH underground network downtown; warming centres well-established; emergency preparedness normalized post-2013</td>
         <td>Beach and coastal outdoor identity year-round; early morning activity peak in summer; hurricane preparedness is practiced annual ritual (go-bags, evacuation routes); flood zone awareness increasingly normalized; FEMA CRS Class 5 rating drives community-level flood management participation</td>
       </tr>
@@ -563,6 +588,8 @@
         <td>Extended rainy seasons with more intense downpours; extended dry periods increasing landslide risk via soil instability; El Niño/La Niña cycles intensifying</td>
         <td>Hotter, wetter, and more flood-prone; extreme heat events increasing in frequency and intensity; sea level rise accelerating faster than global average (6.7mm/yr 2000–2023); Delaware River salt intrusion risk materializing by mid-century; precipitation extremes intensifying</td>
         <td>Heat dome events becoming more frequent; wildfire smoke season extending; Bull Run summer streamflow declining; Cascadia earthquake risk unchanged; flooding risk from heavier precipitation increasing</td>
+        <td>Days above 95°F rising from ~7/yr (1990) to projected ~39/yr by 2050; precipitation +14% intensity in 100-year storm; James River flood peaks worsening; ~3,800 regional sites projected to flood by 2050; historically redlined neighborhoods documented as significantly hotter than surrounding areas; RVAgreen 2050 plan in place</td>
+        <td>Days above 102°F rising from ~15/yr to projected ~30/yr by 2050; flooding risk worsening (atmospheric rivers intensifying already nation's highest flood exposure); Delta saltwater intrusion certain as sea level rises; tule fog declining (modest quality-of-life positive); structural flood exposure not eliminable by local action</td>
         <td>Days above 30°C projected to rise from 16 to 66 by 2040–2050; daily maximum rainfall projected to more than double by 2050; winters warming and shortening; freezing rain events may persist or increase despite milder average winters</td>
         <td>Sea level rise dominant trajectory; NOAA projects additional 15–18 in by 2050 regardless of emissions (locked in by existing concentrations plus ongoing land subsidence); heat days above 94°F rising from ~7 to ~30/yr by 2050; precipitation intensity increasing; tidal flooding events already multiplied 4× since 1960; Sea Level Wise adaptation program is nation's most comprehensive municipal response</td>
       </tr>
@@ -578,6 +605,8 @@
         <td>Neighborhood elevation choice is the single most consequential climate decision; no AC or heating needed in most well-positioned homes</td>
         <td>Sea level rise is occurring faster in Philadelphia than the global average due to land subsidence — the Delaware Valley is sinking; the combination of this with climate-driven drought creates a salt intrusion risk for the drinking water supply with no documented equivalent in other major U.S. cities</td>
         <td>2021 heat dome (116°F) shattered records by 8 degrees and killed 69 locally — a system-level shock the city was entirely unprepared for; Cascadia megaquake risk is the dominant long-horizon hazard</td>
+        <td>The January 2025 water crisis — a completely avoidable infrastructure failure during an ordinary winter storm — exposed that Richmond's century-old treatment plants were operated with a single point of failure; state and federal regulators formally cited negligence; this incident redefined the city's infrastructure risk from theoretical to documented</td>
+        <td>Sacramento's sunshine profile is paradoxically bimodal: most of the year delivers genuinely abundant bright sun ranking it among the sunniest U.S. cities, but winter tule fog events can suppress surface irradiance below Seattle-level thresholds for 2–3 consecutive weeks — making winter light delivery unpredictable in a way that neither reliably sunny nor reliably overcast climates produce</td>
         <td>Lake Ontario's northwest shore position spares Toronto from the worst lake-effect snow that hammers cities on the south/east shores; the 2013 ice storm (43 hours of freezing rain, 300,000 without power) remains the defining modern extreme weather event and a benchmark for infrastructure vulnerability</td>
         <td>Hampton Roads experiences the fastest rate of relative sea level rise on the U.S. East Coast — a combination of global ocean rise and active land subsidence, with land sinking at roughly twice the rate water is rising; this is not a future projection but a documented present condition that already produces routine sunny-day flooding in low-lying neighborhoods</td>
       </tr>
@@ -593,6 +622,8 @@
         <td>0.0</td>
         <td>0.0</td>
         <td>8.1</td>
+        <td>0.0</td>
+        <td>0.0</td>
         <td>[pending]</td>
         <td>0.0</td>
       </tr>
@@ -1855,6 +1886,123 @@
       <p><strong>vs. Seattle:</strong> Both are coastal mid-latitude cities, but the characters are starkly different. Seattle's defining challenge is chronic winter overcast and light deprivation; Virginia Beach has no equivalent — its winter sunshine profile is meaningfully better, and its SAD Days Index of 0.0 compares to Seattle's 13.1. Virginia Beach's summer is significantly hotter and more humid than Seattle's characteristically mild maritime summer. Seattle has no hurricane risk; Virginia Beach's is real. Neither has extreme cold. A retiree who finds Seattle's gray winters psychologically difficult would likely find Virginia Beach's winter far more manageable; a retiree who finds heat and humidity limiting would find Virginia Beach's summer more challenging than Seattle's.</p>
       <p><strong>vs. Columbia, MO:</strong> Columbia has a more purely continental interior character — hot, humid summers broadly similar to Virginia Beach in heat index terms, but colder winters (Columbia's January average high is approximately 37°F versus Virginia Beach's 47–48°F), more tornado risk, and no coastal flooding exposure whatsoever. Virginia Beach's winter is milder; Columbia's tornado exposure (April–June) is higher; Columbia has no sea level rise risk at all. For a retiree prioritizing winter mildness over flood risk, Virginia Beach has the advantage; for a retiree prioritizing freedom from coastal hazards, Columbia's inland position is a material asset.</p>
       <p><strong>vs. Richland, WA:</strong> The contrast is instructive for illustrating how differently two non-extreme climates can manifest. Richland's summers are hot and dry (regularly 100°F+) versus Virginia Beach's hot and humid (87°F + significant heat index). Richland's winters are cold and dry versus Virginia Beach's mild and damp. Richland has essentially zero coastal flood risk; Virginia Beach has among the highest on the East Coast. Richland's sunshine is excellent and its SAD Days Index is 0.0, matching Virginia Beach. Neither has severe winter by national standards. A retiree who manages dry heat better than humid heat, and who prioritizes zero flood risk, would find Richland preferable on those dimensions; Virginia Beach offers milder winters and genuine Atlantic coast access.</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== RICHMOND ===================== -->
+<div id="tab-richmond" class="tab-panel">
+<div class="city-wrapper">
+  <div class="city-header">
+    <h2>Richmond, Virginia</h2>
+    <p class="tagline">Humid subtropical climate with 107.6°F July heat indices, recurring ice storms as the defining winter hazard, and James River tropical-system flood exposure compounded by aging water infrastructure.</p>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle open" onclick="toggleSection(this)">1. Climate Overview &amp; Baseline <span class="arrow">▼</span></button>
+    <div class="section-body open">
+      <p>Richmond sits at 37.54°N, 77.43°W on the Piedmont, roughly 167 feet above sea level, between the Blue Ridge to the west and the Coastal Plain to the east. The Köppen classification is <strong>Cfa — humid subtropical with no dry season</strong>. Annual mean temperature is 58°F (14.5°C), running from a January mean of 38°F to a July mean of about 80.5°F. Annual precipitation is 44.1 inches distributed evenly across the calendar; annual snowfall averages 8.8 inches on the 1991–2020 normal, declining from 10.3 inches in the prior period.</p>
+
+      <p>Annual sunshine totals 2,696 hours, above the U.S. average of roughly 2,500. The seasonal swing is large in absolute temperature terms but the climate has no genuine dry season and no long stretch of stable conditions; transitions are driven by frontal systems crossing the Mid-Atlantic, which produces variability rather than predictability week to week.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">2. Winter — Severity, Variability, and Cold Risk <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>January averages a 47°F high and 30°F low, with about 21 freezing days in the month. Historic record lows fall in the -2°F to 0°F range. Annual snowfall is 8.8 inches with January the snowiest month at roughly 4.5 inches. Cold severity by raw temperature is mild compared to interior continental cities at similar latitude.</p>
+
+      <p>The defining winter hazard is not snow depth or sustained cold — it is <strong>freezing rain and ice storms</strong>. Mid-Atlantic infrastructure is underprepared for sustained icing: treatment, plowing, and salting capacity is sized for an average winter, not a severe one. The January 5–6, 2025 winter storm triggered a water treatment plant failure that produced a 5-day boil-water advisory. The January 23–24, 2026 ice storm was described as catastrophic by state officials, with the governor urging residents off the roads and widespread power outages.</p>
+
+      <p>For an older resident, the dominant winter risks are falls on glazed sidewalks, hypothermia during multi-day power outages when heating fails, and cardiovascular stress during outdoor exertion in cold rain. The infrastructure pattern suggests these events are not anomalies but a recurring feature of the region's winter profile.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">3. Summer — Heat, Humidity, and Health <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>July averages a 90.9°F high and 70.2°F low at 68% humidity, producing a <strong>heat index of 107.6°F</strong>. August is comparable: 88.3°F high, 68.5°F low, 71% humidity, 102.2°F heat index. The city averages 43 days at or above 90°F annually. Overnight lows remain in the low-to-mid 70s, which is below the threshold the body needs for sustained nocturnal recovery from daytime heat strain. Urban heat island intensifies the effect in dense neighborhoods.</p>
+
+      <p>Humid heat is physiologically more dangerous than dry heat at the same air temperature because evaporative cooling becomes inefficient as ambient humidity rises, pushing wet-bulb stress higher. Air conditioning is universal and the housing stock is built for it. There is no reliable afternoon cooling mechanism — no marine breeze, no monsoon downdraft, no afternoon thunderstorm cycle dependable enough to plan around.</p>
+
+      <p>Heat illness risk concentrates during multi-day events when overnight temperatures fail to drop below the mid-70s. For a retiree, the binding constraint is staying indoors during peak hours of June through September, particularly during heat waves with insufficient nocturnal recovery, and treating power outages during summer as a serious medical risk.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">4. Sunshine &amp; SAD Risk <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>Annual sunshine of 2,696 hours exceeds the U.S. average. December averages 5.1 sunshine hours per day. At 37.5°N latitude, the December solstice provides about 10 hours 30 minutes of daylight, which is adequate for circadian function regardless of cloud cover.</p>
+
+      <p>Winter light deprivation in Richmond comes from frontal-system cloud cover, not the persistent marine overcast structure of Pacific maritime climates. Periods of gray weather occur but do not extend into multi-week chronic overcast. The SAD risk profile is moderate: lower than marine-dominated climates, higher than desert or true subtropical baselines that experience less winter cloud cover.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">5. Extreme Weather &amp; Natural Hazards <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p><strong>James River flooding</strong> is the primary natural hazard. Tropical systems and snowmelt drive peak flood events. Hurricane Gaston (2004) killed 9 people in Richmond and condemned 20 blocks in Shockoe Bottom under 10 feet of floodwater. Tropical Storm Agnes (1972) shut downtown for days and flooded utility plants. First Street Foundation estimates 14% of city buildings face some flood risk; high-risk zones include Shockoe Bottom, Manchester, and low-lying riverside parcels. Peak tropical-system risk runs mid-August through mid-October.</p>
+
+      <p>Hurricanes rarely deliver destructive wind to Richmond because the city sits roughly 100 miles inland; the dominant tropical risk channel is rainfall and river flooding rather than wind damage. <strong>Ice storms</strong> are a recurring documented hazard, with both January 2025 and January 2026 producing notable events. Tornadoes occur in Virginia but are not a primary Richmond risk. Earthquake risk is low.</p>
+
+      <p>The hazard stack a retiree must plan for is, in order: tropical-system river flooding (avoidable by neighborhood selection), winter ice storms (unavoidable — plan for 3–7 day power outages), and summer heat waves. Wildfire smoke is an emerging but secondary concern covered separately.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">6. Air Quality <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>The 2025 American Lung Association "State of the Air" report grades Richmond's ozone at B, ranking 165th worst in the nation, with a 4th consecutive year at the metro's best-ever ozone performance — a genuinely improving trajectory. The picture diverges on particulate matter: short-term PM2.5 dropped from a B grade to a C, ranking 98th worst nationally versus 116th worst the prior year, driven primarily by wildfire smoke transport from regional fires.</p>
+
+      <p>Ozone season peaks June through September. PM2.5 degrades during winter cold snaps when wood-burning combines with vehicle exhaust under inversions, and during summer when wildfire smoke from Mid-Atlantic and Northeast fires reaches the region. Wildfire smoke is a growing regional threat as the historical Eastern fire regime intensifies under climate trajectory.</p>
+
+      <p>Overall air quality concern is moderate. Richmond is not among the worst-ranked U.S. metros, but the PM2.5 trajectory is adverse and the underlying driver — wildfire smoke — is not under local control.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">7. Water — Supply, Drought, and Infrastructure <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>Richmond draws water exclusively from the <strong>James River</strong>, with a dam at Williams Island feeding the Byrd Park settling basins and on to the treatment plant. The plants were built in 1924 and 1950, with rated capacity of 132 million gallons per day against typical daily use of about 45 million gallons. Cobb's Creek Reservoir in Cumberland County, with 14.8 billion gallons of capacity, began filling in May 2024 and provides regional drought resilience.</p>
+
+      <p>The <strong>January 2025 water crisis</strong> is the central infrastructure fact. A blizzard triggered a power failure at the treatment plant, producing a 5-day boil-water advisory across the city and neighboring Henrico. The Virginia Department of Health and the U.S. EPA both formally cited Richmond for negligence. Root-cause analysis identified that the plant was operating in "winter mode" with no redundancy, deferred maintenance had degraded resilience, and backup generators were rendered useless by a single point of failure in the electrical architecture.</p>
+
+      <p>Aging infrastructure is now formally documented and corrective action has been ordered, but the capital program timeline to complete remediation is uncertain. For a retiree, the practical implication is that water service is not yet reliably hardened against winter storm events, and a household water-storage protocol remains prudent for the next several years until corrective work demonstrably completes.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">8. How Residents Adapt <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>Summer adaptation is universal AC, outdoor activity confined to before 10AM and after 6PM, and use of the James River parks (Belle Isle, the pipeline walk) in early morning and evening windows. April–May and September–October are the optimal outdoor seasons; serious outdoor planning targets those windows.</p>
+
+      <p>Flood awareness is now embedded in the buyer market: Shockoe Bottom and low-lying riverside parcels are widely recognized as flood-prone, and buyers self-select against them. Ice storm protocol is stock-up-and-stay-home; municipal sand and salt capacity is acknowledged to be inadequate for severe icing events, so residents do not rely on cleared roads during the worst storms. Wildfire smoke adaptation is less developed than in Western cities and is still treated as an unusual event rather than a planned-for hazard.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">9. Climate Change Trajectory <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p>Heat trajectory is the clearest projection: roughly 7 days per year above 95°F on the 1990 baseline rises to a projected ~39 days per year by 2050 — more than a fivefold increase. Annual precipitation rises from 44.2 inches to a projected 48.1 inches by 2050, with 100-year storm intensity increasing about 14%. More intense atmospheric moisture amplifies James River flood peaks, and roughly 3,800 regional sites are projected to flood by 2050.</p>
+
+      <p>Industrial sites along the James River face combined river-flooding and saltwater-intrusion risks documented in a January 2026 study. Richmond is approximately 100 miles inland, but Hampton Roads downstream projects 15–18 inches of sea-level rise by 2050, which will push saltwater intrusion further up the James estuary. Urban heat island effects compound projected temperature increases, with historically redlined neighborhoods documented as significantly hotter than surrounding areas.</p>
+
+      <p>The city maintains the <strong>RVAgreen 2050</strong> climate action plan. The honest read on a 20–30 year retirement horizon is that Richmond's summer heat exposure rises substantially, flood frequency and severity rise materially, and ice-storm hazard remains essentially constant. None of these are catastrophic individually; the cumulative trajectory is adverse and well-documented.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="section-toggle" onclick="toggleSection(this)">10. Comparisons to Baselines <span class="arrow">▼</span></button>
+    <div class="section-body">
+      <p><strong>vs. San Diego, CA:</strong> Richmond summers are far hotter and more humid (107.6°F July heat index versus San Diego's mild ~76°F July high at low humidity). Richmond winters are colder with documented ice and snow risk versus San Diego's mild 66°F January highs. Richmond carries significant flood and ice hazards versus San Diego's minimal hazard profile. Annual sunshine is moderately lower (2,696 versus ~3,200 hours). Hurricane and tropical-system flooding adds a seasonal risk channel with no San Diego equivalent.</p>
+
+      <p><strong>vs. Seattle, WA:</strong> Richmond receives more annual sunshine (2,696 versus ~2,170 hours). Richmond summers are hot and humid (107.6°F heat index) versus Seattle's mild 75°F July highs. Richmond winters are colder and ice-prone versus Seattle's mild maritime winter. Both metros carry moderate flood exposure but of different character. Richmond avoids Seattle's chronic marine overcast structure but pays for it with much larger seasonal temperature swings and greater extreme-event exposure.</p>
+
+      <p><strong>vs. Columbia, MO:</strong> The closest match in the baseline set. Both are humid subtropical with hot humid summers and ice-and-snow winters. Richmond's July heat index of 107.6°F is comparable to Columbia's roughly 100–104°F. Richmond carries additional hurricane and tropical-system flooding risk that Columbia does not face. Columbia carries greater tornado exposure. Richmond's 8.8 inches of annual snowfall is lower than Columbia's roughly 14 inches. Overall climate experience is closely comparable.</p>
+
+      <p><strong>vs. Richland, WA:</strong> Richland summers are dry and hot (~94°F July highs at low humidity, no heat-index amplification); Richmond's 90.9°F July at 68% humidity produces dramatically worse felt conditions. Richland winters are cold, dry, and bright with below-freezing January nights; Richmond winters are milder but wetter, cloudier, and ice-prone. Annual precipitation is 8 inches in Richland versus 44 inches in Richmond. The trade is dry-bright-cold versus humid-mild-gray winters, and dry-tolerable versus humid-oppressive summers.</p>
     </div>
   </div>
 
