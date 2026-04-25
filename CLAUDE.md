@@ -38,7 +38,7 @@ retirement\_politics.html — 8 sections per city covering governance, fiscal he
 
 
 
-Cities with content in one or both files: Portland, Chicago, Eugene, Honolulu, Kansas City, Anchorage, Philadelphia, Medellín, Lisbon, Toronto, Albuquerque, Virginia Beach–Norfolk–Newport News MSA.
+Cities with content in one or both files: Portland, Chicago, Eugene, Honolulu, Kansas City, Anchorage, Philadelphia, Medellín, Lisbon, Toronto, Albuquerque, Virginia Beach–Norfolk–Newport News MSA, Sacramento CA, Richmond VA.
 
 A preference-revealing quiz (conversational, not a built artifact) narrowed a \~12-city field to three serious contenders: Honolulu, Philadelphia, and Toronto.
 
@@ -93,6 +93,24 @@ Derek accepts shorter lists and narrower datasets over forcing coverage with unr
 He prefers concise tables without explanatory columns and pushes back on benchmarks that lack contextual meaning
 
 
+
+City research workflow
+
+When Derek names a city to add, run this three-stage workflow:
+
+Stage 1 — Research (Sonnet, current session): Run parallel WebSearch queries covering all 18 dimensions (8 politics + 10 weather). Save results to research\_data/@cityname.md. Cover: governance form, mayor, council, fiscal health, retiree tax burden, crime stats, housing prices/rent, economy/employers, transit, LGBTQ MEI score, political stability, Köppen classification, temperatures, precipitation, sunshine hours, extreme hazards, air quality, water supply, climate change projections.
+
+Stage 2 — Write (Opus agent): Spawn an Opus agent with the @cityname.md content and the output specifications below. Opus writes two draft HTML panel fragments and saves them to research\_data/cityname\_politics\_draft.html and research\_data/cityname\_weather\_draft.html.
+
+Stage 3 — Integrate (current session): Insert the draft content into docs/retirement\_politics.html and docs/retirement\_weather.html. Add the tab nav button (alphabetical order), insert the panel HTML before the next city's comment block, and add city columns to both summary tables in alphabetical order. Commit and push.
+
+Output specs for Opus:
+
+Politics panel: \<div id="tab-cityname" class="city-panel"\> with 8 sections using .section/.section-header/.section-num/.section-title/.section-toggle/.section-body structure. Section 1 gets class="section open". Each section body: 2–3 \<p\> paragraphs.
+
+Weather panel: \<div id="tab-cityname" class="tab-panel"\>\<div class="city-wrapper"\> with 10 sections using button.section-toggle/.section-body structure. Section 1 button gets class="section-toggle open" and body gets class="section-body open". Each section body: 2–3 \<p\> paragraphs. Section 10 compares ONLY to the four baseline cities (San Diego, Seattle, Columbia MO, Richland WA).
+
+Isolation Rule applies in both drafts: no cross-target-city references in weather sections 1–9 or any politics section.
 
 Tools \& resources
 
